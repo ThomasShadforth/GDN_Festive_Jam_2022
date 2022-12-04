@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cc5cab73b7bc124785ec7d5853a4252, type: 3}
-  m_Name: Look Decision
+  m_Script: {fileID: 11500000, guid: 0f86f49cd0211b74e83d9f60dea455cf, type: 3}
+  m_Name: Stunned
   m_EditorClassIdentifier: 
-  checkRadius: 3

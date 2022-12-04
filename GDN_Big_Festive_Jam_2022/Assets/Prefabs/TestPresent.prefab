@@ -151,6 +151,7 @@ MonoBehaviour:
   interactRadius: 3.19
   currentState: 0
   _trigger: {fileID: 1648433016345321342}
+  _collider: {fileID: 1648433016345321313}
 --- !u!58 &1648433016345321342
 CircleCollider2D:
   m_ObjectHideFlags: 0

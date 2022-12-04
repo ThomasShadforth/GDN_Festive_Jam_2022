@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Config Values:")]
     [SerializeField] LayerMask _whatIsGround;
+    [SerializeField] LayerMask _enemyLayer;
+    [SerializeField] float _enemyStompLength;
 
     [Header("Movement:")]
     [SerializeField] float _defaultMaxSpeed = 4f;
@@ -61,6 +63,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _jumpBuffer = .15f;
     [SerializeField] float _coyoteTime = .25f;
     [SerializeField] int maxJumps;
+    int remainingJumps;
     float _jumpBufferCount;
     float _coyoteCounter;
     float _jumpPhase;
@@ -81,10 +84,11 @@ public class PlayerController : MonoBehaviour
 
         _input.Player.Enable();
 
-        _input.Player.Jump.started += PlayerJump;
-        _input.Player.Jump.canceled += PlayerJump;
-        _input.Player.Throw.started += Throw;
         
+        _input.Player.Throw.started += Throw;
+
+
+        _input.Player.Jump.performed += PlayerJump;
 
         _rb2d = GetComponent<Rigidbody2D>();
         _gravForce = Physics2D.gravity * _rb2d.mass;
@@ -94,7 +98,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        remainingJumps = maxJumps;
     }
 
     // Update is called once per frame
@@ -102,8 +106,7 @@ public class PlayerController : MonoBehaviour
     {
         _desiredVelocity = new Vector2(_moveInput, 0) * Mathf.Max((_maxSpeed * _movementSpeedTiers[_currentSpeedTier]), 0);
 
-        _desiredJump |= _input.Player.Jump.WasPressedThisFrame();
-        //Debug.Log(_input.Player.Jump.IsPressed());
+        //Debug.Log(_desiredJump);
     }
 
     private void FixedUpdate()
@@ -153,9 +156,18 @@ public class PlayerController : MonoBehaviour
 
         PlayerMove();
         Jump();
-        //Insert the jump method
 
         _rb2d.velocity = _velocity;
+    }
+
+    void PlayerJump(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+        {
+            return;
+        }
+
+        _desiredJump = true;
     }
 
     void PlayerMove()
@@ -227,6 +239,7 @@ public class PlayerController : MonoBehaviour
         {
             _coyoteCounter = _coyoteTime;
             _isJumping = false;
+            _jumpPhase = 0;
         }
         else
         {
@@ -235,6 +248,7 @@ public class PlayerController : MonoBehaviour
 
         if (_desiredJump)
         {
+            Debug.Log("WILL JUMP");
             _desiredJump = false;
             _jumpBufferCount = _jumpBuffer;
         } else if(!_desiredJump && _jumpBufferCount > 0)
@@ -246,22 +260,23 @@ public class PlayerController : MonoBehaviour
         {
             JumpAction();
         }
-        if(_jumping && _velocity.y > 0)
+        if(_input.Player.Jump.ReadValue<float>() != 0 && _velocity.y > 0)
         {
             _rb2d.gravityScale = (_defaultJumpGrav * _jumpGravityTiers[_currentSpeedTier]);
             _shouldMaintainHeight = false;
         }
 
-        if(!_jumping || _velocity.y < 0)
+        if(_input.Player.Jump.ReadValue<float>() == 0 || _velocity.y < 0)
         {
             _rb2d.gravityScale = (_defaultFallGrav * _jumpGravityTiers[_currentSpeedTier]);
             _shouldMaintainHeight = true;
+            CheckForEnemyStomp();
         }
 
         if (grounded)
         {
             _rb2d.gravityScale = 1f;
-            _jumpPhase = 0;
+            remainingJumps = maxJumps;
         }
 
         //Add jump button to action map
@@ -269,18 +284,12 @@ public class PlayerController : MonoBehaviour
 
     private void JumpAction()
     {
-        if (_coyoteCounter > 0 || (_isJumping && _jumpPhase < maxJumps))
+        if (_coyoteCounter > 0 || (_isJumping && remainingJumps > 0))
         {
-            if (_isJumping)
-            {
-                _jumpPhase++;
-            }
-
-            _coyoteCounter = 0f;
-            float jumpSpeed = Mathf.Sqrt(-2 * Physics2D.gravity.y * _jumpHeight);
-
-
             
+            
+            _coyoteCounter = 0f;
+            float jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * _jumpHeight);
             _isJumping = true;
 
             if (_velocity.y > 0)
@@ -293,10 +302,7 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    void PlayerJump(InputAction.CallbackContext context)
-    {
-        _jumping = !_jumping;
-    }
+    
 
     void IncreasePresentNumb()
     {
@@ -331,6 +337,20 @@ public class PlayerController : MonoBehaviour
 
             GameManager.instance.ChangePresentCount(-1);
 
+        }
+    }
+
+    public void CheckForEnemyStomp()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, _enemyStompLength, _enemyLayer);
+
+        Debug.DrawRay(transform.position, Vector2.down * _enemyStompLength);
+
+        if (hit)
+        {
+            AIThinker enemy = hit.collider.gameObject.GetComponent<AIThinker>();
+            enemy.isStunned = true;
+            _velocity.y += 3f;
         }
     }
 

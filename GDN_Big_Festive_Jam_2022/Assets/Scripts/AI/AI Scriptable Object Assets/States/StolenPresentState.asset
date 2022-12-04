@@ -10,17 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 21efb20101f9d74409884a558cfbf4a5, type: 3}
-  m_Name: ChaseState
+  m_Name: StolenPresentState
   m_EditorClassIdentifier: 
   actions:
-  - {fileID: 11400000, guid: 318d36fa94d80dc499b506f0c38245c2, type: 2}
+  - {fileID: 11400000, guid: d2ebc2fdc58463e43859aaf176544236, type: 2}
   transitions:
-  - decision: {fileID: 11400000, guid: 5ed6c966dc1b14445a552acebdc0eb61, type: 2}
-    trueState: {fileID: 11400000, guid: d316b65dbf1f4f941b61df62e1bf3199, type: 2}
-    falseState: {fileID: 11400000, guid: fec513e873fd4c0488b67d41bed8adaa, type: 2}
-  - decision: {fileID: 11400000, guid: 48c12fbeb8042554da330a178f416466, type: 2}
-    trueState: {fileID: 11400000, guid: d68c749670642a346a00186dc7594293, type: 2}
-    falseState: {fileID: 11400000, guid: d316b65dbf1f4f941b61df62e1bf3199, type: 2}
   - decision: {fileID: 11400000, guid: 305416444a430b94aa7c3fd1c56a633d, type: 2}
     trueState: {fileID: 11400000, guid: f8420c0bd00b7934f88cc4e1b6599aea, type: 2}
     falseState: {fileID: 11400000, guid: d316b65dbf1f4f941b61df62e1bf3199, type: 2}

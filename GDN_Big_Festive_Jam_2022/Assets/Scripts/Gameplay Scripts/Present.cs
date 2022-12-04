@@ -22,7 +22,7 @@ public class Present : MonoBehaviour
     bool _canPickup;
 
     [SerializeField] Collider2D _trigger;
-    
+    public Collider2D _collider;
 
     private void Start()
     {
@@ -51,6 +51,14 @@ public class Present : MonoBehaviour
     }
 
     
+    public void ResetParent()
+    {
+        transform.parent = null;
+        _rb2d.isKinematic = false;
+        _collider.enabled = true;
+        ChangePresentState();
+    }
+
 
     public void ChangePresentState()
     {
