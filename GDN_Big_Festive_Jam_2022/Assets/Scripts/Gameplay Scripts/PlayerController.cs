@@ -142,10 +142,10 @@ public class PlayerController : MonoBehaviour
         if(_moveInput != _prevMoveInput && _moveInput != 0)
         {
             //Flip the x scale based on the new direction
-            if(_moveInput > _prevMoveInput && !_facingRight)
+            if(_moveInput > 0 && !_facingRight)
             {
                 FlipXScale();
-            } else if(_moveInput < _prevMoveInput && _facingRight)
+            } else if(_moveInput < 0 && _facingRight)
             {
                 FlipXScale();
             }
@@ -261,6 +261,7 @@ public class PlayerController : MonoBehaviour
         if (grounded)
         {
             _rb2d.gravityScale = 1f;
+            _jumpPhase = 0;
         }
 
         //Add jump button to action map
@@ -270,12 +271,16 @@ public class PlayerController : MonoBehaviour
     {
         if (_coyoteCounter > 0 || (_isJumping && _jumpPhase < maxJumps))
         {
+            if (_isJumping)
+            {
+                _jumpPhase++;
+            }
 
             _coyoteCounter = 0f;
             float jumpSpeed = Mathf.Sqrt(-2 * Physics2D.gravity.y * _jumpHeight);
 
-           
 
+            
             _isJumping = true;
 
             if (_velocity.y > 0)
