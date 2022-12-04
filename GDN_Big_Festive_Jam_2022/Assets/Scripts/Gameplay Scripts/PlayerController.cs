@@ -168,6 +168,12 @@ public class PlayerController : MonoBehaviour
         }
 
         _desiredJump = true;
+
+        if (_isJumping)
+        {
+            remainingJumps--;
+            Debug.Log("REMAINING JUMPS IS NOW: " + remainingJumps);
+        }
     }
 
     void PlayerMove()
@@ -248,7 +254,7 @@ public class PlayerController : MonoBehaviour
 
         if (_desiredJump)
         {
-            Debug.Log("WILL JUMP");
+            
             _desiredJump = false;
             _jumpBufferCount = _jumpBuffer;
         } else if(!_desiredJump && _jumpBufferCount > 0)

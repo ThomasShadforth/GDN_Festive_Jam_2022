@@ -20,7 +20,7 @@ public class CheckForStunDecision : Decision
             thinker.rb2d.velocity = Vector2.zero;
 
             //Drop the present
-            thinker.targetPresent.ResetParent();
+            thinker.targetPresent.ResetParent(SetPresentDropDirection(thinker));
             thinker.targetPresent = null;
 
             return true;
@@ -29,5 +29,10 @@ public class CheckForStunDecision : Decision
         {
             return false;
         }
+    }
+
+    int SetPresentDropDirection(AIThinker thinker)
+    {
+        return thinker.transform.position.x < thinker.playerTarget.transform.position.x ? -1 : 1;
     }
 }

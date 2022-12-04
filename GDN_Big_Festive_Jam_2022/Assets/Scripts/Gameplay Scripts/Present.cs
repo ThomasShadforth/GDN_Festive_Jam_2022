@@ -51,11 +51,12 @@ public class Present : MonoBehaviour
     }
 
     
-    public void ResetParent()
+    public void ResetParent(int directionToThrow)
     {
         transform.parent = null;
         _rb2d.isKinematic = false;
         _collider.enabled = true;
+        _rb2d.velocity = new Vector2(7f * directionToThrow, _rb2d.velocity.y);
         ChangePresentState();
     }
 
