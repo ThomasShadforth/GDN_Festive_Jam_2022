@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,7 +22,10 @@ public class PlayerController : MonoBehaviour
 
     bool _desiredJump;
     bool _isJumping;
-    
+    bool _isDashing;
+    float _lastImageXPos;
+    [SerializeField]
+    float _distBetweenImages = .25f;
 
     int _xDirect;
 
@@ -70,6 +74,12 @@ public class PlayerController : MonoBehaviour
     bool _prevGrounded = false;
     bool _jumping;
 
+    [Header("Knockback Values:")]
+    [SerializeField] float _knockTime;
+    [HideInInspector] public bool _isKnocked = false;
+    [SerializeField] Vector2 _knockForce;
+
+    float dashModifier = 1f;
     PlayerInputActions _input;
 
 
@@ -89,6 +99,8 @@ public class PlayerController : MonoBehaviour
 
 
         _input.Player.Jump.performed += PlayerJump;
+        _input.Player.Dash.performed += SetPlayerDash;
+        _input.Player.Dash.canceled += SetPlayerDash;
 
         _rb2d = GetComponent<Rigidbody2D>();
         _gravForce = Physics2D.gravity * _rb2d.mass;
@@ -104,13 +116,30 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _desiredVelocity = new Vector2(_moveInput, 0) * Mathf.Max((_maxSpeed * _movementSpeedTiers[_currentSpeedTier]), 0);
+        if (GamePause.gamePaused || _isKnocked)
+        {
+            return;
+        }
+        _desiredVelocity = new Vector2(_moveInput, 0) * Mathf.Max(((_maxSpeed * _movementSpeedTiers[_currentSpeedTier]) * dashModifier), 0);
+
+        
 
         //Debug.Log(_desiredJump);
     }
 
     private void FixedUpdate()
     {
+        if (GamePause.gamePaused)
+        {
+            _rb2d.velocity = Vector2.zero;
+            return;
+        }
+
+        if (_isKnocked)
+        {
+            return;
+        }
+
         (bool rayHitGround, RaycastHit2D hit) = RaycastToGround();
 
         grounded = CheckGrounded(rayHitGround, hit);
@@ -141,6 +170,14 @@ public class PlayerController : MonoBehaviour
         //Add checks for input
 
         _moveInput = _input.Player.Movement.ReadValue<float>();
+        if(_moveInput > 0.01f)
+        {
+            _moveInput = 1;
+        }
+        else if(_moveInput < -.01f)
+        {
+            _moveInput = -1;
+        }
 
         if(_moveInput != _prevMoveInput && _moveInput != 0)
         {
@@ -157,11 +194,25 @@ public class PlayerController : MonoBehaviour
         PlayerMove();
         Jump();
 
+        if (_isDashing)
+        {
+            if (MathF.Abs(transform.position.x - _lastImageXPos) > _distBetweenImages)
+            {
+                AfterImageObjectPool.instance.GetFromPool();
+                _lastImageXPos = transform.position.x;
+            }
+        }
+
         _rb2d.velocity = _velocity;
     }
 
     void PlayerJump(InputAction.CallbackContext context)
     {
+        if (GamePause.gamePaused || _isKnocked)
+        {
+            return;
+        }
+
         if (!context.performed)
         {
             return;
@@ -176,9 +227,31 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void SetPlayerDash(InputAction.CallbackContext context)
+    {
+        if(GamePause.gamePaused || _isKnocked)
+        {
+            return;
+        }
+
+        if (context.performed)
+        {
+            //Set the player to dash
+            dashModifier = 1.5f;
+            _isDashing = true;
+            AfterImageObjectPool.instance.GetFromPool();
+            _lastImageXPos = transform.position.x;
+        } else if (context.canceled)
+        {
+            //Cancel the dash (Set modifier back to normal)
+            dashModifier = 1f;
+            _isDashing = false;
+        }
+    }
+
     void PlayerMove()
     {
-        _maxSpeedChange = _acceleration * Time.deltaTime;
+        _maxSpeedChange = _acceleration * GamePause.deltaTime;
         _velocity.x = Mathf.MoveTowards(_velocity.x, _desiredVelocity.x, _maxSpeedChange);
     }
 
@@ -249,7 +322,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            _coyoteCounter -= Time.deltaTime;
+            _coyoteCounter -= GamePause.deltaTime;
         }
 
         if (_desiredJump)
@@ -259,7 +332,7 @@ public class PlayerController : MonoBehaviour
             _jumpBufferCount = _jumpBuffer;
         } else if(!_desiredJump && _jumpBufferCount > 0)
         {
-            _jumpBufferCount -= Time.deltaTime;
+            _jumpBufferCount -= GamePause.deltaTime;
         }
 
         if(_jumpBufferCount > 0)
@@ -335,15 +408,47 @@ public class PlayerController : MonoBehaviour
 
     void Throw(InputAction.CallbackContext context)
     {
+        if (GamePause.gamePaused || _isKnocked)
+        {
+            return;
+        }
+
         //Add the ability to throw DO IT NOW DO IT NOW
         if (GameManager.instance.presentCount > 0)
         {
             GameObject present = Instantiate(_presentThrown, _throwPos.position, transform.rotation);
-            present.GetComponent<Rigidbody2D>().velocity = transform.right * 6f * xDirect;
+            present.GetComponent<Rigidbody2D>().velocity = new Vector2(transform.right.x * xDirect, .5f) * 6f;
 
             GameManager.instance.ChangePresentCount(-1);
 
         }
+    }
+
+    public void Knockback(Vector2 aiPosition)
+    {
+        Vector2 knockDir = (Vector2)transform.position - aiPosition;
+        knockDir = knockDir.normalized;
+        knockDir.y = .3f;
+        StartCoroutine(KnockbackCo(knockDir));
+    }
+
+    IEnumerator KnockbackCo(Vector2 knockDir)
+    {
+        float knockTimer = _knockTime;
+
+        while(knockTimer > 0)
+        {
+            if (!_isKnocked)
+            {
+                _isKnocked = true;
+                _rb2d.velocity = new Vector2(knockDir.x * _knockForce.x, knockDir.y * _knockForce.y);
+            }
+
+            knockTimer -= GamePause.deltaTime;
+            yield return null;
+        }
+
+        _isKnocked = false;
     }
 
     public void CheckForEnemyStomp()
@@ -355,6 +460,7 @@ public class PlayerController : MonoBehaviour
         if (hit)
         {
             AIThinker enemy = hit.collider.gameObject.GetComponent<AIThinker>();
+            StartCoroutine(CinemachineCamShake.CamShakeCo(.1f, FindObjectOfType<CinemachineVirtualCamera>()));
             enemy.isStunned = true;
             _velocity.y += 3f;
         }

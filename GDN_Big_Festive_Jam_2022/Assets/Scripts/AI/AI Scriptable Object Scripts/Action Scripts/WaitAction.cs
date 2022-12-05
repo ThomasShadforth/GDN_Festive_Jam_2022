@@ -13,6 +13,6 @@ public class WaitAction : Action
     void Wait(AIThinker thinker)
     {
         thinker.rb2d.velocity = Vector2.zero;
-        thinker.waitTimer -= Time.deltaTime;
+        thinker.waitTimer -= GamePause.deltaTime;
     }
 }

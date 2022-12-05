@@ -15,9 +15,9 @@ public class FindPresentDecision : Decision
 
     private bool CheckForPresent(AIThinker thinker)
     {
-        if(Physics2D.OverlapCircle(thinker.transform.position, 2f, thinker.presentsLayer))
+        if(Physics2D.OverlapCircle(thinker.transform.position, thinker.minChaseDistance, thinker.presentsLayer))
         {
-            thinker.targetPresent = Physics2D.OverlapCircle(thinker.transform.position, 2f, thinker.presentsLayer).GetComponent<Present>();
+            thinker.targetPresent = Physics2D.OverlapCircle(thinker.transform.position, thinker.minChaseDistance, thinker.presentsLayer).GetComponent<Present>();
             return true;
         }
         else

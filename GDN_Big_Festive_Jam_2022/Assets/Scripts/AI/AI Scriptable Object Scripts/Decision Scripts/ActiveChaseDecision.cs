@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Active Chase", menuName = "ScriptableObjects/PluggableAI/Active Chase")]
 public class ActiveChaseDecision : Decision
 {
-    public float chaseRadius = 2f;
+    
 
     public override bool Decide(AIThinker thinker)
     {
@@ -16,7 +16,7 @@ public class ActiveChaseDecision : Decision
 
     bool CheckForRadius(AIThinker thinker)
     {
-        if(Vector2.Distance(thinker.transform.position, thinker.playerTarget.transform.position) <= chaseRadius)
+        if(Vector2.Distance(thinker.transform.position, thinker.playerTarget.transform.position) <= thinker.minChaseDistance)
         {
             return true;
         }

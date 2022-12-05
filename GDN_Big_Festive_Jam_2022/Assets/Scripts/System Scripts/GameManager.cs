@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -13,18 +14,37 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance != null)
+        
+    }
+
+    
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        presentCount = 0;
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        if (instance != null)
         {
             Destroy(gameObject);
         }
 
         instance = this;
         DontDestroyOnLoad(this.gameObject);
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         countText.text = "Present Count: " + presentCount;
     }
 

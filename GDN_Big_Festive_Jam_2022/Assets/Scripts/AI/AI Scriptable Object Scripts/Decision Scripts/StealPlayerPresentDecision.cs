@@ -22,8 +22,10 @@ public class StealPlayerPresentDecision : Decision
             if(GameManager.instance.presentCount > 0)
             {
                 GameManager.instance.ChangePresentCount(-1);
+                thinker.playerTarget.GetComponent<PlayerController>().Knockback(thinker.transform.position);
                 thinker.CreatePresent();
                 thinker.SetPresentParent();
+                
                 return true;
             }
             else

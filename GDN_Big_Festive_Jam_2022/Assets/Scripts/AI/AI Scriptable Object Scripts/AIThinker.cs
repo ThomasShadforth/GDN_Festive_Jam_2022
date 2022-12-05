@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class AIThinker : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class AIThinker : MonoBehaviour
     public bool isStunned;
     public float minPatrolDist = .5f;
     public float minStealDistance = 1.5f;
+    public float minChaseDistance = 4f;
 
     public int currentWaypoint = 0;
 
@@ -47,7 +49,14 @@ public class AIThinker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GamePause.gamePaused)
+        {
+            rb2d.velocity = Vector2.zero;
+            return;
+        }
+
         currentState.UpdateState(this);
+        CheckForXScale();
     }
 
     public void TransitionToState(State nextState)
@@ -61,6 +70,7 @@ public class AIThinker : MonoBehaviour
     public void CreatePresent()
     {
         targetPresent = Instantiate(presentPrefab, AIHandPos.position, Quaternion.identity);
+        StartCoroutine(CinemachineCamShake.CamShakeCo(.1f, FindObjectOfType<CinemachineVirtualCamera>()));
     }
 
     public void SetPresentParent()
@@ -75,5 +85,24 @@ public class AIThinker : MonoBehaviour
     public void SetWaitTimer()
     {
         waitTimer = waitTime;
+    }
+
+    public void CheckForXScale()
+    {
+        Vector3 scalar = transform.localScale;
+        if(rb2d.velocity.x > 0 && transform.localScale.x < 0)
+        {
+            scalar.x = Mathf.Abs(scalar.x) * 1;
+        } else if(rb2d.velocity.x < 0 && transform.localScale.x > 0)
+        {
+            scalar.x = Mathf.Abs(scalar.x) * -1;
+        }
+
+        transform.localScale = scalar;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        //Gizmos.DrawWireSphere(transform.position, minChaseDistance);
     }
 }

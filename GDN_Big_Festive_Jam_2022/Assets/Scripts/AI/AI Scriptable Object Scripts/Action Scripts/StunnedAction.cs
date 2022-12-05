@@ -12,6 +12,6 @@ public class StunnedAction : Action
 
     void CountdownStun(AIThinker thinker)
     {
-        thinker.stunTimer -= Time.deltaTime;
+        thinker.stunTimer -= GamePause.deltaTime;
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu (fileName = "Look Decision", menuName = "ScriptableObjects/PluggableAI/Look")]
 public class LookDecision : Decision
 {
-    public float checkRadius = 2f;
+    
 
     public override bool Decide(AIThinker thinker)
     {
@@ -17,7 +17,7 @@ public class LookDecision : Decision
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
 
-        if(Vector2.Distance(playerObj.transform.position, thinker.transform.position) <= checkRadius)
+        if(Vector2.Distance(playerObj.transform.position, thinker.transform.position) <= thinker.minChaseDistance)
         {
             thinker.playerTarget = playerObj;
             thinker.waitTimer = thinker.waitTime;

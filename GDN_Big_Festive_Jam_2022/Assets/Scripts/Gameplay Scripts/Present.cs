@@ -31,7 +31,7 @@ public class Present : MonoBehaviour
 
         if (!_trigger.enabled)
         {
-            Invoke("EnableCollider", 1f);
+            Invoke("EnableCollider", .3f);
         }
 
     }
@@ -56,7 +56,7 @@ public class Present : MonoBehaviour
         transform.parent = null;
         _rb2d.isKinematic = false;
         _collider.enabled = true;
-        _rb2d.velocity = new Vector2(7f * directionToThrow, _rb2d.velocity.y);
+        _rb2d.velocity = new Vector2(directionToThrow, .5f) * 6f;
         ChangePresentState();
     }
 

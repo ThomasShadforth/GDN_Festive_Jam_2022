@@ -75,6 +75,14 @@ public class MainMenu : MonoBehaviour
     public void StartGame()
     {
         //Start the game (Load the first level)
+        StartCoroutine(StartGameCo());
+        
+    }
+
+    IEnumerator StartGameCo()
+    {
+        UIFade.instance.FadeToBlack();
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
