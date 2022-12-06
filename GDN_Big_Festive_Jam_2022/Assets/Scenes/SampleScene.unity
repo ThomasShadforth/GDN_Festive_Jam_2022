@@ -4124,7 +4124,7 @@ MonoBehaviour:
   countText: {fileID: 1577499457}
   timerText: {fileID: 1328463483}
   countdownText: {fileID: 454230950}
-  maxLevelTimer: 196
+  maxLevelTimer: 90
   _defaultCountdown: 3
   _countdown: 3
   isCountingDown: 0
