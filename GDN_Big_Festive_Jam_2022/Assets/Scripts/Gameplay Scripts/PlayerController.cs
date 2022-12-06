@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using Cinemachine;
 
 public class PlayerController : MonoBehaviour
@@ -85,7 +86,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Vector2 _knockForce;
 
     float dashModifier = 1f;
-    PlayerInputActions _input;
+    [SerializeField] PlayerInputActions _input;
+    
 
 
     //Add test counter for the presents
@@ -95,11 +97,21 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        remainingJumps = maxJumps;
+
+        
+
         _input = new PlayerInputActions();
 
         _input.Player.Enable();
 
-        
+
         _input.Player.Throw.started += Throw;
 
 
@@ -113,19 +125,17 @@ public class PlayerController : MonoBehaviour
         _maxSpeed = _defaultMaxSpeed;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        remainingJumps = maxJumps;
-    }
-
     // Update is called once per frame
     void Update()
     {
-        if (GamePause.gamePaused || _isKnocked || _rolling)
+        if (GamePause.gamePaused || _isKnocked || _rolling || FindObjectOfType<GameManager>().isCountingDown)
         {
+            //Debug.Log(GameManager.instance.isCountingDown);
             return;
         }
+
+        //Debug.Log("CAN MOVE");
+
         _desiredVelocity = new Vector2(_moveInput, 0) * Mathf.Max(((_maxSpeed * _movementSpeedTiers[_currentSpeedTier]) * dashModifier), 0);
 
         
@@ -141,7 +151,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (_isKnocked || _rolling)
+        if (_isKnocked || _rolling || FindObjectOfType<GameManager>().isCountingDown)
         {
             return;
         }
@@ -216,7 +226,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log(context);
 
-        if (GamePause.gamePaused || _isKnocked || _rolling)
+        if (GamePause.gamePaused || _isKnocked || _rolling || FindObjectOfType<GameManager>().isCountingDown)
         {
             return;
         }
@@ -237,7 +247,7 @@ public class PlayerController : MonoBehaviour
 
     void SetPlayerDash(InputAction.CallbackContext context)
     {
-        if(GamePause.gamePaused || _isKnocked)
+        if(GamePause.gamePaused || _isKnocked || FindObjectOfType<GameManager>().isCountingDown)
         {
             return;
         }
@@ -416,7 +426,7 @@ public class PlayerController : MonoBehaviour
 
     void Throw(InputAction.CallbackContext context)
     {
-        if (GamePause.gamePaused || _isKnocked || _rolling)
+        if (GamePause.gamePaused || _isKnocked || _rolling || FindObjectOfType<GameManager>().isCountingDown)
         {
             return;
         }
@@ -501,7 +511,7 @@ public class PlayerController : MonoBehaviour
     {
 
 
-        if (_rolling || _isKnocked || GamePause.gamePaused)
+        if (_rolling || _isKnocked || GamePause.gamePaused || FindObjectOfType<GameManager>().isCountingDown)
         {
             return;
         }

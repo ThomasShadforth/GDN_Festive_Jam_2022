@@ -14,6 +14,22 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] GameObject _settingsMenu;
     [SerializeField] GameObject _settingsButtonSelected;
 
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SetupInput();
+    }
+
+    void SetupInput()
+    {
+        _input = new PlayerInputActions();
+        _input.Player.Enable();
+        _input.Player.Pause.started += PauseGame;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +46,8 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame(InputAction.CallbackContext context)
     {
+
+
         if (context.started)
         {
             if (!_pauseMenu.activeInHierarchy)
@@ -78,10 +96,13 @@ public class PauseMenu : MonoBehaviour
     IEnumerator RestartLevelCo()
     {
         GamePause.gamePaused = false;
+        _pauseMenu.SetActive(false);
+        
         if (UIFade.instance != null)
         {
             UIFade.instance.FadeToBlack();
         }
+        
         yield return new WaitForSeconds(1f);
         
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
