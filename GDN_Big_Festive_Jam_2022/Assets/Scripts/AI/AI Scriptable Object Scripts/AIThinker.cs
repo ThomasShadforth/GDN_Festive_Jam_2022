@@ -52,7 +52,7 @@ public class AIThinker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GamePause.gamePaused || FindObjectOfType<GameManager>().isCountingDown)
+        if (GamePause.gamePaused)
         {
             rb2d.velocity = Vector2.zero;
             return;
