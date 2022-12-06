@@ -17,6 +17,7 @@ public class AIThinker : MonoBehaviour
     public GameObject playerTarget;
     public Present targetPresent;
     public Present presentPrefab;
+    public PresentObject presentTarget;
 
     public Transform AIHandPos;
 
@@ -32,6 +33,8 @@ public class AIThinker : MonoBehaviour
     public float stunTimer;
     [HideInInspector]
     public bool isStunned;
+    [HideInInspector]
+    public bool isHoldingPresent;
     public float minPatrolDist = .5f;
     public float minStealDistance = 1.5f;
     public float minChaseDistance = 4f;
@@ -71,6 +74,22 @@ public class AIThinker : MonoBehaviour
     {
         targetPresent = Instantiate(presentPrefab, AIHandPos.position, Quaternion.identity);
         StartCoroutine(CinemachineCamShake.CamShakeCo(.1f, FindObjectOfType<CinemachineVirtualCamera>()));
+    }
+
+    public void GetPresentFromPool()
+    {
+        GameObject present = PresentObjectPool.instance.GetFromPool();
+        presentTarget = present.GetComponent<PresentObject>();
+    }
+
+    public void SetPoolPresentParent()
+    {
+        presentTarget.transform.parent = AIHandPos;
+        presentTarget.transform.position = AIHandPos.position;
+        presentTarget.GetComponent<Rigidbody2D>().isKinematic = true;
+        presentTarget.collider.enabled = false;
+        presentTarget.ChangePresentState();
+        presentTarget.handToAppearIn = AIHandPos;
     }
 
     public void SetPresentParent()

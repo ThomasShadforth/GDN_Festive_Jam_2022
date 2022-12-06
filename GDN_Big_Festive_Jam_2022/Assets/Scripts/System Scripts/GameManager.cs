@@ -8,9 +8,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    
+
     public TextMeshProUGUI countText;
 
     public int presentCount { get; private set; }
+    public int goalPresents { get; private set; }
+    int maxPresents;
+
 
     private void Awake()
     {
@@ -31,7 +36,16 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        SetMaxPresents();
+    }
+
+    public void SetMaxPresents()
+    {
+        PresentObject[] presentsFound = FindObjectsOfType<PresentObject>();
+        maxPresents = presentsFound.Length;
+        
         presentCount = 0;
+        
     }
 
     // Start is called before the first frame update
@@ -44,6 +58,8 @@ public class GameManager : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(this.gameObject);
+
+        
 
         countText.text = "Present Count: " + presentCount;
     }
@@ -61,5 +77,19 @@ public class GameManager : MonoBehaviour
         countText.text = "Present Count: " + presentCount;
 
         FindObjectOfType<PlayerController>().CheckPresentCount(presentCount);
+    }
+
+    public void ChangeGoalPresents(int presentChange)
+    {
+        goalPresents += presentChange;
+
+        //Set the text for the goal
+
+        if(goalPresents == maxPresents)
+        {
+            //win the level, move to next one
+            Debug.Log("LEVEL COMPLETE!");
+        }
+
     }
 }

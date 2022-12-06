@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     float _lastImageXPos;
     [SerializeField]
     float _distBetweenImages = .25f;
+    [SerializeField]
+    float _wallCheckDistance = 1.5f;
 
     int _xDirect;
 
@@ -41,11 +43,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _dashMaxSpeed = 8f;
     [SerializeField] float _maxSpeed;
     [SerializeField] float _acceleration;
+    [SerializeField] float rollForce;
 
     [Header("Movement Modifiers:")]
     [SerializeField] float[] _movementSpeedTiers;
     [SerializeField] float[] _jumpGravityTiers;
     [SerializeField] int[] _maxPresentTiers;
+    [SerializeField] float rollTime;
     int _currentSpeedTier;
 
     Vector2 _desiredVelocity;
@@ -73,6 +77,7 @@ public class PlayerController : MonoBehaviour
     float _jumpPhase;
     bool _prevGrounded = false;
     bool _jumping;
+    bool _rolling;
 
     [Header("Knockback Values:")]
     [SerializeField] float _knockTime;
@@ -101,6 +106,7 @@ public class PlayerController : MonoBehaviour
         _input.Player.Jump.performed += PlayerJump;
         _input.Player.Dash.performed += SetPlayerDash;
         _input.Player.Dash.canceled += SetPlayerDash;
+        _input.Player.Roll.performed += Roll;
 
         _rb2d = GetComponent<Rigidbody2D>();
         _gravForce = Physics2D.gravity * _rb2d.mass;
@@ -116,7 +122,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GamePause.gamePaused || _isKnocked)
+        if (GamePause.gamePaused || _isKnocked || _rolling)
         {
             return;
         }
@@ -135,7 +141,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (_isKnocked)
+        if (_isKnocked || _rolling)
         {
             return;
         }
@@ -208,7 +214,9 @@ public class PlayerController : MonoBehaviour
 
     void PlayerJump(InputAction.CallbackContext context)
     {
-        if (GamePause.gamePaused || _isKnocked)
+        Debug.Log(context);
+
+        if (GamePause.gamePaused || _isKnocked || _rolling)
         {
             return;
         }
@@ -408,7 +416,7 @@ public class PlayerController : MonoBehaviour
 
     void Throw(InputAction.CallbackContext context)
     {
-        if (GamePause.gamePaused || _isKnocked)
+        if (GamePause.gamePaused || _isKnocked || _rolling)
         {
             return;
         }
@@ -416,10 +424,33 @@ public class PlayerController : MonoBehaviour
         //Add the ability to throw DO IT NOW DO IT NOW
         if (GameManager.instance.presentCount > 0)
         {
+            /*
             GameObject present = Instantiate(_presentThrown, _throwPos.position, transform.rotation);
             present.GetComponent<Rigidbody2D>().velocity = new Vector2(transform.right.x * xDirect, .5f) * 6f;
 
+            GameManager.instance.ChangePresentCount(-1);*/
+
+            GameObject present = PresentObjectPool.instance.GetFromPool();
+            present.GetComponent<PresentObject>().Invoke("EnableCollider", .5f);
+
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right * xDirect, _wallCheckDistance, _whatIsGround);
+
+            if (hit)
+            {
+                present.transform.position = new Vector3(transform.position.x, transform.position.y + 1.5f, transform.position.z);
+                present.GetComponent<PresentObject>()._droppedOrThrown = true;
+                present.GetComponent<Rigidbody2D>().velocity = new Vector2(transform.right.x * xDirect, .7f) * 6;
+            }
+            else
+            {
+                present.transform.position = _throwPos.position;
+                present.GetComponent<PresentObject>()._droppedOrThrown = true;
+                present.GetComponent<Rigidbody2D>().velocity = new Vector2(transform.right.x * xDirect, .5f) * 6f;
+            }
+
+            
             GameManager.instance.ChangePresentCount(-1);
+
 
         }
     }
@@ -464,6 +495,47 @@ public class PlayerController : MonoBehaviour
             enemy.isStunned = true;
             _velocity.y += 3f;
         }
+    }
+
+    void Roll(InputAction.CallbackContext context)
+    {
+
+
+        if (_rolling || _isKnocked || GamePause.gamePaused)
+        {
+            return;
+        }
+        if (context.performed)
+        {
+            if (_isDashing)
+            {
+                StartCoroutine(PlayerRollCo(.3f));
+            }
+            else
+            {
+                StartCoroutine(PlayerRollCo(.1f));
+            }
+        }
+    }
+
+    IEnumerator PlayerRollCo(float rollSpeed)
+    {
+        float rollTimer = rollTime;
+
+        while(rollTimer > 0)
+        {
+            if (!_rolling)
+            {
+                _rolling = true;
+            }
+            rollTimer -= GamePause.deltaTime;
+
+            _rb2d.AddForce(new Vector2(rollSpeed * rollForce * xDirect, 0), ForceMode2D.Impulse);
+
+            yield return null;
+        }
+
+        _rolling = false;
     }
 
     void FlipXScale()

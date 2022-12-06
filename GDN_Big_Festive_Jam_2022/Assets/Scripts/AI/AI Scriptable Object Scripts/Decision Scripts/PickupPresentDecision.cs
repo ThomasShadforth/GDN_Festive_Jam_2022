@@ -19,8 +19,14 @@ public class PickupPresentDecision : Decision
 
         if (hit)
         {
+            /*
             thinker.SetPresentParent();
+            thinker.isHoldingPresent = true;
+            thinker.playerTarget = GameObject.FindGameObjectWithTag("Player");*/
+            thinker.SetPoolPresentParent();
+            thinker.isHoldingPresent = true;
             thinker.playerTarget = GameObject.FindGameObjectWithTag("Player");
+
             return true;
         }
         else
@@ -28,22 +34,16 @@ public class PickupPresentDecision : Decision
             return false;
         }
 
-        /*
-        if(Vector2.Distance(thinker.transform.position, thinker.targetPresent.transform.position) < thinker.minStealDistance)
-        {
-            //Pickup the present
-            thinker.SetPresentParent();
-            thinker.playerTarget = GameObject.FindGameObjectWithTag("Player");
-            return true;
-        }
-        else
-        {
-            return false;
-        }*/
+        
     }
 
     int CheckPresentDirection(AIThinker thinker)
     {
-        return thinker.transform.position.x < thinker.targetPresent.transform.position.x ? 1 : -1;
+        if (thinker.targetPresent != null || thinker.presentTarget != null)
+        {
+            return thinker.transform.position.x < thinker.presentTarget.transform.position.x ? 1 : -1;
+        }
+
+        return 0;
     }
 }

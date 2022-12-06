@@ -17,6 +17,11 @@ public class MoveToPresent : Action
 
     int SetMoveDirection(AIThinker thinker)
     {
-        return thinker.targetPresent.transform.position.x > thinker.transform.position.x ? 1 : -1;
+        if (thinker.targetPresent != null || thinker.presentTarget != null)
+        {
+            return thinker.presentTarget.transform.position.x > thinker.transform.position.x ? 1 : -1;
+        }
+
+        return 0;
     }
 }

@@ -11,6 +11,7 @@ public class PresentObjectPool : MonoBehaviour
     private void Start()
     {
         instance = this;
+        
     }
 
     public void AddToPool(GameObject instanceToAdd)

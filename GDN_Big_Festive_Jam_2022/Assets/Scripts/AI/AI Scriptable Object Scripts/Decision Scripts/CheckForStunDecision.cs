@@ -20,10 +20,18 @@ public class CheckForStunDecision : Decision
             thinker.rb2d.velocity = Vector2.zero;
 
             //Drop the present
-            if (thinker.targetPresent != null)
+            if (thinker.targetPresent != null && thinker.isHoldingPresent)
             {
                 thinker.targetPresent.ResetParent(SetPresentDropDirection(thinker));
+                thinker.isHoldingPresent = false;
                 thinker.targetPresent = null;
+            }
+
+            if(thinker.presentTarget != null && thinker.isHoldingPresent)
+            {
+                thinker.presentTarget.ResetParent(SetPresentDropDirection(thinker));
+                thinker.isHoldingPresent = false;
+                thinker.presentTarget = null;
             }
 
             return true;

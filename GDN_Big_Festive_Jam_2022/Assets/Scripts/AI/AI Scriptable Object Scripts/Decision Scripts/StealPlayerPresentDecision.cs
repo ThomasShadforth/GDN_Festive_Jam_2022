@@ -21,10 +21,15 @@ public class StealPlayerPresentDecision : Decision
         {
             if(GameManager.instance.presentCount > 0)
             {
+                
                 GameManager.instance.ChangePresentCount(-1);
                 thinker.playerTarget.GetComponent<PlayerController>().Knockback(thinker.transform.position);
+                thinker.isHoldingPresent = true;
+                /*
                 thinker.CreatePresent();
-                thinker.SetPresentParent();
+                thinker.SetPresentParent();*/
+                thinker.GetPresentFromPool();
+                thinker.SetPoolPresentParent();
                 
                 return true;
             }
@@ -37,28 +42,6 @@ public class StealPlayerPresentDecision : Decision
         {
             return false;
         }
-
-        /*
-        if(Vector2.Distance(thinker.transform.position, thinker.playerTarget.transform.position) <= thinker.minStealDistance)
-        {
-            if (GameManager.instance.presentCount > 0)
-            {
-                GameManager.instance.ChangePresentCount(-1);
-                thinker.CreatePresent();
-                thinker.SetPresentParent();
-                //spawn a present in the hand, deactivate collider and rigidbody
-                return true;
-            }
-        }
-        else
-        {
-            return false;
-        }*/
-
-        
-
-
-        
     }
 
     int SetRaycastDirection(AIThinker thinker)

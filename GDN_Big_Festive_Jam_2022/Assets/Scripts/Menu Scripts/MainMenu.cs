@@ -30,6 +30,8 @@ public class MainMenu : MonoBehaviour
         _input.UI.Enable();
         _input.UI.Submit.started += OpenMenu;
         _input.UI.Click.started += OpenMenu;
+
+        AudioManager.instance.Play("TitleScreen");
     }
 
     // Update is called once per frame
@@ -85,4 +87,6 @@ public class MainMenu : MonoBehaviour
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
+
+    
 }
