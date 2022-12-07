@@ -11,11 +11,18 @@ public class GameManager : MonoBehaviour
     
 
     public TextMeshProUGUI countText;
+    public TextMeshProUGUI countDownText;
+    public TextMeshProUGUI timerText;
+
 
     public int presentCount { get; private set; }
     public int goalPresents { get; private set; }
+    public bool isCountingDown;
     int maxPresents;
-
+    public float defaultCountdown;
+    public float defaultTimer;
+    float _timer;
+    float _countdown;
 
     private void Awake()
     {
@@ -41,11 +48,17 @@ public class GameManager : MonoBehaviour
 
     public void SetMaxPresents()
     {
+        maxPresents = 0;
         PresentObject[] presentsFound = FindObjectsOfType<PresentObject>();
         maxPresents = presentsFound.Length;
-        
+        _countdown = defaultCountdown;
+        _timer = defaultTimer;
+        string tempCountdown = string.Format("{0:00}", _countdown);
+        string timerDefault = string.Format("{0:0}:{1:00}", Mathf.Floor(_timer/60), _timer % 60);
+        countDownText.text = tempCountdown;
+        timerText.text = timerDefault;
         presentCount = 0;
-        
+        StartCoroutine(CountDownCo());
     }
 
     // Start is called before the first frame update
@@ -67,7 +80,19 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isCountingDown)
+        {
+            return;
+        }
+
+        if (_timer > 0)
+        {
+            _timer -= GamePause.deltaTime;
+            string timerDefault = string.Format("{0:0}:{1:00}", Mathf.Floor(_timer / 60), _timer % 60);
+            timerText.text = timerDefault;
+        }
         
+
     }
 
     public void ChangePresentCount(int presentChange)
@@ -91,5 +116,32 @@ public class GameManager : MonoBehaviour
             Debug.Log("LEVEL COMPLETE!");
         }
 
+    }
+
+    IEnumerator CountDownCo()
+    {
+        isCountingDown = true;
+
+        yield return new WaitForSeconds(.5f);
+
+        countDownText.gameObject.SetActive(true);
+
+        while(_countdown > 0)
+        {
+            _countdown -= GamePause.deltaTime;
+
+            string tempCountdown = string.Format("{0:00}", _countdown);
+            countDownText.text = tempCountdown;
+
+            yield return null;
+        }
+
+        isCountingDown = false;
+        countDownText.gameObject.SetActive(false);
+    }
+
+    public void DestroySelf()
+    {
+        Destroy(gameObject);
     }
 }

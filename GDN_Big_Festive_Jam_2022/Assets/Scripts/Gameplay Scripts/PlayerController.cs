@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Vector2 _knockForce;
 
     float dashModifier = 1f;
-    PlayerInputActions _input;
+    public PlayerInputActions _input;
 
 
     //Add test counter for the presents
@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GamePause.gamePaused || _isKnocked || _rolling)
+        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown)
         {
             return;
         }
@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (_isKnocked || _rolling)
+        if (_isKnocked || _rolling || GameManager.instance.isCountingDown)
         {
             return;
         }
@@ -216,7 +216,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log(context);
 
-        if (GamePause.gamePaused || _isKnocked || _rolling)
+        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown )
         {
             return;
         }
@@ -237,7 +237,7 @@ public class PlayerController : MonoBehaviour
 
     void SetPlayerDash(InputAction.CallbackContext context)
     {
-        if(GamePause.gamePaused || _isKnocked)
+        if(GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown )
         {
             return;
         }
@@ -416,7 +416,7 @@ public class PlayerController : MonoBehaviour
 
     void Throw(InputAction.CallbackContext context)
     {
-        if (GamePause.gamePaused || _isKnocked || _rolling)
+        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown)
         {
             return;
         }
@@ -501,20 +501,24 @@ public class PlayerController : MonoBehaviour
     {
 
 
-        if (_rolling || _isKnocked || GamePause.gamePaused)
+        if (_rolling || _isKnocked || GamePause.gamePaused || GameManager.instance.isCountingDown)
         {
             return;
         }
         if (context.performed)
         {
-            if (_isDashing)
+            if (grounded)
             {
-                StartCoroutine(PlayerRollCo(.3f));
+                if (_isDashing)
+                {
+                    StartCoroutine(PlayerRollCo(.4f));
+                }
+                else
+                {
+                    StartCoroutine(PlayerRollCo(.17f));
+                }
             }
-            else
-            {
-                StartCoroutine(PlayerRollCo(.1f));
-            }
+            
         }
     }
 

@@ -72,4 +72,9 @@ public class AudioManager : MonoBehaviour
 
         s.source.Stop();
     }
+
+    public void DestroySelf()
+    {
+        Destroy(gameObject);
+    }
 }

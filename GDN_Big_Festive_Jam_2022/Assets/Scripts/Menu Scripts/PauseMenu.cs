@@ -83,7 +83,8 @@ public class PauseMenu : MonoBehaviour
             UIFade.instance.FadeToBlack();
         }
         yield return new WaitForSeconds(1f);
-        
+        GameManager.instance.DestroySelf();
+        FindObjectOfType<PlayerController>()._input.Dispose();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -95,6 +96,7 @@ public class PauseMenu : MonoBehaviour
         {
             UIFade.instance.FadeToBlack();
         }
+        
         StartCoroutine(QuitToMenuCo());
         //Return to the main menu via scenemanager
     }
@@ -102,7 +104,9 @@ public class PauseMenu : MonoBehaviour
     IEnumerator QuitToMenuCo()
     {
         yield return new WaitForSeconds(1f);
-        Destroy(GameManager.instance.gameObject);
+        GameManager.instance.DestroySelf();
+        AudioManager.instance.DestroySelf();
+        FindObjectOfType<PlayerController>()._input.Dispose();
         SceneManager.LoadScene(0);
         
     }

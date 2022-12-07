@@ -85,6 +85,7 @@ public class MainMenu : MonoBehaviour
     {
         UIFade.instance.FadeToBlack();
         yield return new WaitForSeconds(1f);
+        AudioManager.instance.Stop("TitleScreen");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 

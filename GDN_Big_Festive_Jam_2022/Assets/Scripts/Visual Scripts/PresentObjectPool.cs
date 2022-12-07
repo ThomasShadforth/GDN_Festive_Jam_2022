@@ -20,6 +20,16 @@ public class PresentObjectPool : MonoBehaviour
         _availableObjects.Enqueue(instanceToAdd);
     }
 
+    public GameObject DepositPresent()
+    {
+        return _availableObjects.Dequeue();
+    }
+
+    public void RetrievePresent(GameObject instanceToAdd)
+    {
+        _availableObjects.Enqueue(instanceToAdd);
+    }
+
     public GameObject GetFromPool()
     {
         var poolInstance = _availableObjects.Dequeue();
