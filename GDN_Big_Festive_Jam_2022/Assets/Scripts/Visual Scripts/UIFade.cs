@@ -74,8 +74,13 @@ public class UIFade : MonoBehaviour
         }
     }
 
+    public void DestroySelf()
+    {
+        Destroy(gameObject);
+    }
     public void FadeToBlack()
     {
+        fading = true;
         fadeImage.gameObject.SetActive(true);
         _shouldFadeToBlack = true;
         _shouldFadeFromBlack = false;

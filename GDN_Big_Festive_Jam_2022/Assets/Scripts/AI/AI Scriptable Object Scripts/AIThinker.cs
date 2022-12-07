@@ -20,11 +20,18 @@ public class AIThinker : MonoBehaviour
     public PresentObject presentTarget;
 
     public Transform AIHandPos;
+    [SerializeField] Transform feetPos;
 
     public LayerMask presentsLayer;
     public LayerMask playerLayer;
+    public LayerMask whatIsGround;
 
     public float moveSpeed;
+    public float jumpHeight;
+    public float jumpCheckDist;
+    public float groundCheckDist;
+    public bool grounded;
+
     public float waitTime = 2f;
     [HideInInspector]
     public float waitTimer;
@@ -49,10 +56,12 @@ public class AIThinker : MonoBehaviour
         stunTimer = stunTime;
     }
 
+
+
     // Update is called once per frame
     void Update()
     {
-        if (GamePause.gamePaused || GameManager.instance.isCountingDown)
+        if (GamePause.gamePaused || GameManager.instance.isCountingDown || UIFade.instance.fading)
         {
             rb2d.velocity = Vector2.zero;
             return;
@@ -60,6 +69,12 @@ public class AIThinker : MonoBehaviour
 
         currentState.UpdateState(this);
         CheckForXScale();
+        CheckIfGrounded();
+    }
+
+    void CheckIfGrounded()
+    {
+        grounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDist, whatIsGround);
     }
 
     public void TransitionToState(State nextState)

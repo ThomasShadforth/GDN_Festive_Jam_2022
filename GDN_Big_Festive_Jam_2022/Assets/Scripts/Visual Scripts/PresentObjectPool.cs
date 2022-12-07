@@ -25,9 +25,21 @@ public class PresentObjectPool : MonoBehaviour
         return _availableObjects.Dequeue();
     }
 
+    public int GetPoolCount()
+    {
+        return _availableObjects.Count;
+    }
+
     public void RetrievePresent(GameObject instanceToAdd)
     {
         _availableObjects.Enqueue(instanceToAdd);
+        
+    }
+
+    public void SetPoolQueue(Queue<GameObject> _queueToAdd)
+    {
+        _availableObjects = _queueToAdd;
+        Debug.Log(_availableObjects.Count);
     }
 
     public GameObject GetFromPool()

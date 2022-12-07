@@ -90,6 +90,16 @@ public class GameManager : MonoBehaviour
             _timer -= GamePause.deltaTime;
             string timerDefault = string.Format("{0:0}:{1:00}", Mathf.Floor(_timer / 60), _timer % 60);
             timerText.text = timerDefault;
+
+            if(_timer < 0)
+            {
+                _timer = 0;
+                timerDefault = string.Format("{0:0}:{1:00}", Mathf.Floor(_timer / 60), _timer % 60);
+                timerText.text = timerDefault;
+
+                //Trigger a game over
+                GameOver();
+            }
         }
         
 
@@ -108,14 +118,26 @@ public class GameManager : MonoBehaviour
     {
         goalPresents += presentChange;
 
+        //Debug.Log(goalPresents);
+
         //Set the text for the goal
 
         if(goalPresents == maxPresents)
         {
             //win the level, move to next one
-            Debug.Log("LEVEL COMPLETE!");
+            //Debug.Log("LEVEL COMPLETE!");
         }
 
+    }
+
+    void GameOver()
+    {
+        if(UIFade.instance != null)
+        {
+            UIFade.instance.FadeToBlack();
+        }
+
+        StartCoroutine(LoadGameOverCo());
     }
 
     IEnumerator CountDownCo()
@@ -140,6 +162,12 @@ public class GameManager : MonoBehaviour
         countDownText.gameObject.SetActive(false);
     }
 
+    IEnumerator LoadGameOverCo()
+    {
+        yield return new WaitForSeconds(1f);
+        SceneIndexer.lastSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene("GameOver");
+    }
     public void DestroySelf()
     {
         Destroy(gameObject);

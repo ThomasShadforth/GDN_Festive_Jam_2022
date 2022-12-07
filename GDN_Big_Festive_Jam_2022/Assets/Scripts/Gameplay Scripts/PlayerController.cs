@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _maxSpeed;
     [SerializeField] float _acceleration;
     [SerializeField] float rollForce;
+    [SerializeField] bool _rollCooldown;
 
     [Header("Movement Modifiers:")]
     [SerializeField] float[] _movementSpeedTiers;
@@ -78,6 +79,7 @@ public class PlayerController : MonoBehaviour
     bool _prevGrounded = false;
     bool _jumping;
     bool _rolling;
+    bool _canRoll;
 
     [Header("Knockback Values:")]
     [SerializeField] float _knockTime;
@@ -86,12 +88,14 @@ public class PlayerController : MonoBehaviour
 
     float dashModifier = 1f;
     public PlayerInputActions _input;
+    
 
+    SpriteRenderer _renderer;
 
     //Add test counter for the presents
     int _presentCounter;
     int xDirect = 1;
-
+    int enemyStompCount = 1;
 
     private void Awake()
     {
@@ -107,7 +111,7 @@ public class PlayerController : MonoBehaviour
         _input.Player.Dash.performed += SetPlayerDash;
         _input.Player.Dash.canceled += SetPlayerDash;
         _input.Player.Roll.performed += Roll;
-
+        _canRoll = true;
         _rb2d = GetComponent<Rigidbody2D>();
         _gravForce = Physics2D.gravity * _rb2d.mass;
         _maxSpeed = _defaultMaxSpeed;
@@ -117,12 +121,13 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         remainingJumps = maxJumps;
+        _renderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown)
+        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading)
         {
             return;
         }
@@ -141,7 +146,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (_isKnocked || _rolling || GameManager.instance.isCountingDown)
+        if (_isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading)
         {
             return;
         }
@@ -214,9 +219,9 @@ public class PlayerController : MonoBehaviour
 
     void PlayerJump(InputAction.CallbackContext context)
     {
-        Debug.Log(context);
+        
 
-        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown )
+        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading )
         {
             return;
         }
@@ -231,13 +236,13 @@ public class PlayerController : MonoBehaviour
         if (_isJumping)
         {
             remainingJumps--;
-            Debug.Log("REMAINING JUMPS IS NOW: " + remainingJumps);
+            
         }
     }
 
     void SetPlayerDash(InputAction.CallbackContext context)
     {
-        if(GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown )
+        if(GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading)
         {
             return;
         }
@@ -386,7 +391,6 @@ public class PlayerController : MonoBehaviour
 
             _velocity.y += jumpSpeed;
         }
-        
     }
 
     
@@ -416,7 +420,7 @@ public class PlayerController : MonoBehaviour
 
     void Throw(InputAction.CallbackContext context)
     {
-        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown)
+        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading)
         {
             return;
         }
@@ -424,12 +428,7 @@ public class PlayerController : MonoBehaviour
         //Add the ability to throw DO IT NOW DO IT NOW
         if (GameManager.instance.presentCount > 0)
         {
-            /*
-            GameObject present = Instantiate(_presentThrown, _throwPos.position, transform.rotation);
-            present.GetComponent<Rigidbody2D>().velocity = new Vector2(transform.right.x * xDirect, .5f) * 6f;
-
-            GameManager.instance.ChangePresentCount(-1);*/
-
+            
             GameObject present = PresentObjectPool.instance.GetFromPool();
             present.GetComponent<PresentObject>().Invoke("EnableCollider", .5f);
 
@@ -450,7 +449,6 @@ public class PlayerController : MonoBehaviour
 
             
             GameManager.instance.ChangePresentCount(-1);
-
 
         }
     }
@@ -501,7 +499,7 @@ public class PlayerController : MonoBehaviour
     {
 
 
-        if (_rolling || _isKnocked || GamePause.gamePaused || GameManager.instance.isCountingDown)
+        if (_rolling || _isKnocked || GamePause.gamePaused || GameManager.instance.isCountingDown || !_canRoll || UIFade.instance.fading)
         {
             return;
         }
@@ -511,7 +509,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (_isDashing)
                 {
-                    StartCoroutine(PlayerRollCo(.4f));
+                    StartCoroutine(PlayerRollCo(.33f));
                 }
                 else
                 {
@@ -524,6 +522,8 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator PlayerRollCo(float rollSpeed)
     {
+        _renderer.color = Color.yellow;
+
         float rollTimer = rollTime;
 
         while(rollTimer > 0)
@@ -534,12 +534,28 @@ public class PlayerController : MonoBehaviour
             }
             rollTimer -= GamePause.deltaTime;
 
-            _rb2d.AddForce(new Vector2(rollSpeed * rollForce * xDirect, 0), ForceMode2D.Impulse);
+            _rb2d.AddForce(new Vector2(rollSpeed * rollForce * xDirect * _movementSpeedTiers[_currentSpeedTier], 0), ForceMode2D.Impulse);
 
             yield return null;
         }
 
+        _renderer.color = Color.white;
+
         _rolling = false;
+
+        if (_rollCooldown)
+        {
+            _canRoll = false;
+
+            StartCoroutine(RollCooldownCo());
+        }
+
+    }
+
+    IEnumerator RollCooldownCo()
+    {
+        yield return new WaitForSeconds(.5f);
+        _canRoll = true;
     }
 
     void FlipXScale()

@@ -46,7 +46,7 @@ public class MainMenu : MonoBehaviour
         //Check if it is open. if not, open it, else ignore it
         if (!_mainMenu.activeInHierarchy)
         {
-            Debug.Log("MAIN MENU OPENING!!");
+            
             _titleScreen.SetActive(false);
             _mainMenu.SetActive(true);
             EventSystem.current.SetSelectedGameObject(null);

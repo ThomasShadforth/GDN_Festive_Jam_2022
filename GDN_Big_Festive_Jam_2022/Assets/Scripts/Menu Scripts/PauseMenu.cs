@@ -106,8 +106,9 @@ public class PauseMenu : MonoBehaviour
         yield return new WaitForSeconds(1f);
         GameManager.instance.DestroySelf();
         AudioManager.instance.DestroySelf();
+        
         FindObjectOfType<PlayerController>()._input.Dispose();
         SceneManager.LoadScene(0);
-        
+        //UIFade.instance.DestroySelf();
     }
 }
