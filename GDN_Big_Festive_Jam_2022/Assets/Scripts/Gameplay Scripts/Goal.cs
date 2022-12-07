@@ -23,8 +23,8 @@ public class Goal : MonoBehaviour
         _input.Player.Enable();
 
         _input.Player.DropPresent.started += DepositIntoGoal;
-        _input.Player.DropPresent.performed += DepositIntoGoal;
-        //_input.Player.DropPresent.canceled += InteractWithGoal;
+        _input.Player.TakePresent.started += TakeFromGoal;
+        
         presentsRemaining = FindObjectsOfType<PresentObject>().Length;
     }
 
@@ -66,6 +66,27 @@ public class Goal : MonoBehaviour
         }
     }
 
+    void TakeFromGoal(InputAction.CallbackContext context)
+    {
+        if (GamePause.gamePaused || GameManager.instance.isCountingDown)
+        {
+            return;
+        }
+
+        if (presentsRemaining > 0)
+        {
+            GameManager.instance.ChangeGoalPresents(-_depositedPresents.Count);
+            GameManager.instance.ChangePresentCount(_depositedPresents.Count);
+            presentsRemaining += _depositedPresents.Count;
+
+            Queue<GameObject> tempPresentsQueue = new Queue<GameObject>();
+            tempPresentsQueue = _depositedPresents;
+
+            PresentObjectPool.instance.SetPoolQueue(tempPresentsQueue);
+            _depositedPresents.Clear();
+        }
+    }
+
     void DepositIntoGoal(InputAction.CallbackContext context)
     {
         //Debug.Log("DEPOSITING");
@@ -79,92 +100,20 @@ public class Goal : MonoBehaviour
         {
             if (GameManager.instance.presentCount > 0)
             {
-                if (context.started)
-                {
-                    GameManager.instance.ChangeGoalPresents(1);
-                    GameManager.instance.ChangePresentCount(-1);
-                    GameObject presentToDeposit = PresentObjectPool.instance.DepositPresent();
-                    _depositedPresents.Enqueue(presentToDeposit);
-                    presentsRemaining--;
-                    Debug.Log(_depositedPresents.Count);
-                }
-            }
-            else
-            {
-                if(presentsRemaining > 0)
-                {
-                    if (context.performed)
-                    {
-                        
-                        GameManager.instance.ChangeGoalPresents(-_depositedPresents.Count);
-                        GameManager.instance.ChangePresentCount(_depositedPresents.Count);
-                        presentsRemaining += _depositedPresents.Count;
-
-                        Queue<GameObject> tempPresentsQueue = new Queue<GameObject>();
-                        tempPresentsQueue = _depositedPresents;
-
-                        PresentObjectPool.instance.SetPoolQueue(tempPresentsQueue);
-
-                        //Debug.Log(PresentObjectPool.instance.GetPoolCount());
-                    }
-                }
-            }
-        }
-    }
-
-    void InteractWithGoal(InputAction.CallbackContext context)
-    {
-        
-        bool held = false;
-
-        if (context.performed)
-        {
-            held = true;
-            Debug.Log("TAKING ALL OF THE THINGS");
-        }
-
-        if(GamePause.gamePaused || GameManager.instance.isCountingDown)
-        {
-            return;
-        }
-
-        if (_playerInRange)
-        {
-            if (GameManager.instance.presentCount == 0)
-            {
-
-                if(presentsRemaining > 0)
-                {
-                    if (context.canceled && !held)
-                    {
-                        GameManager.instance.ChangeGoalPresents(-1);
-                        GameManager.instance.ChangePresentCount(1);
-                        PresentObjectPool.instance.RetrievePresent(_depositedPresents.Dequeue());
-                        presentsRemaining++;
-                    } else if (context.performed)
-                    {
-                        GameManager.instance.ChangeGoalPresents(-_depositedPresents.Count);
-                        GameManager.instance.ChangePresentCount(_depositedPresents.Count);
-                        presentsRemaining += _depositedPresents.Count;
-
-                        for(int i = 0; i < _depositedPresents.Count; i++)
-                        {
-                            PresentObjectPool.instance.RetrievePresent(_depositedPresents.Dequeue());
-
-                        }
-                    }
-                }
-                
-            }
-            else
-            {
-                
                 GameManager.instance.ChangeGoalPresents(1);
                 GameManager.instance.ChangePresentCount(-1);
-                _depositedPresents.Enqueue(PresentObjectPool.instance.DepositPresent());
+                GameObject presentToDeposit = PresentObjectPool.instance.DepositPresent();
+                _depositedPresents.Enqueue(presentToDeposit);
                 presentsRemaining--;
+                Debug.Log(_depositedPresents.Count);
+                
+            }
+            else
+            {
+                
             }
         }
-        
     }
+
+    
 }

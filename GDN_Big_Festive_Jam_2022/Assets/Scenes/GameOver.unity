@@ -311,10 +311,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 1122356972}
+    m_SelectOnDown: {fileID: 1122356972}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -780,10 +780,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 229306632}
+    m_SelectOnDown: {fileID: 229306632}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -1351,3 +1351,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41cf15e49ef131c47b8ff7a941bd6a02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _firstGameOverButton: {fileID: 229306630}

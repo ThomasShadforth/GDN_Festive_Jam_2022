@@ -89,6 +89,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TakePresent"",
+                    ""type"": ""Button"",
+                    ""id"": ""81a6dd4b-7ecf-4148-af8c-c1391db199dc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -375,6 +384,28 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Roll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5061370d-f586-4693-ad44-6885ea9583bc"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TakePresent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d3ae03ca-ef6e-4a0a-aa6b-7c368d6e4f4e"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TakePresent"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -963,6 +994,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_DropPresent = m_Player.FindAction("DropPresent", throwIfNotFound: true);
         m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
+        m_Player_TakePresent = m_Player.FindAction("TakePresent", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1041,6 +1073,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_DropPresent;
     private readonly InputAction m_Player_Roll;
+    private readonly InputAction m_Player_TakePresent;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1052,6 +1085,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @DropPresent => m_Wrapper.m_Player_DropPresent;
         public InputAction @Roll => m_Wrapper.m_Player_Roll;
+        public InputAction @TakePresent => m_Wrapper.m_Player_TakePresent;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1082,6 +1116,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Roll.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
                 @Roll.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
                 @Roll.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
+                @TakePresent.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTakePresent;
+                @TakePresent.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTakePresent;
+                @TakePresent.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTakePresent;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1107,6 +1144,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Roll.started += instance.OnRoll;
                 @Roll.performed += instance.OnRoll;
                 @Roll.canceled += instance.OnRoll;
+                @TakePresent.started += instance.OnTakePresent;
+                @TakePresent.performed += instance.OnTakePresent;
+                @TakePresent.canceled += instance.OnTakePresent;
             }
         }
     }
@@ -1243,6 +1283,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnDropPresent(InputAction.CallbackContext context);
         void OnRoll(InputAction.CallbackContext context);
+        void OnTakePresent(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

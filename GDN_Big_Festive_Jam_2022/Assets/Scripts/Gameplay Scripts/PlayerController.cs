@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     int _xDirect;
 
     [SerializeField] GameObject _sack;
+    [SerializeField] GameObject _feet;
 
     [Header("Config Values:")]
     [SerializeField] LayerMask _whatIsGround;
@@ -49,6 +50,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Modifiers:")]
     [SerializeField] float[] _movementSpeedTiers;
     [SerializeField] float[] _jumpGravityTiers;
+    [SerializeField] float[] _rollDistanceTiers;
     [SerializeField] int[] _maxPresentTiers;
     [SerializeField] float rollTime;
     int _currentSpeedTier;
@@ -221,7 +223,7 @@ public class PlayerController : MonoBehaviour
     {
         
 
-        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading )
+        if (GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading )
         {
             return;
         }
@@ -229,6 +231,14 @@ public class PlayerController : MonoBehaviour
         if (!context.performed)
         {
             return;
+        }
+
+
+        if (_rolling)
+        {
+            _rolling = false;
+            
+            StartCoroutine(RollCooldownCo());
         }
 
         _desiredJump = true;
@@ -332,6 +342,7 @@ public class PlayerController : MonoBehaviour
             _coyoteCounter = _coyoteTime;
             _isJumping = false;
             _jumpPhase = 0;
+            enemyStompCount = 1;
         }
         else
         {
@@ -482,6 +493,7 @@ public class PlayerController : MonoBehaviour
 
     public void CheckForEnemyStomp()
     {
+        /*
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, _enemyStompLength, _enemyLayer);
 
         Debug.DrawRay(transform.position, Vector2.down * _enemyStompLength);
@@ -492,7 +504,23 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(CinemachineCamShake.CamShakeCo(.1f, FindObjectOfType<CinemachineVirtualCamera>()));
             enemy.isStunned = true;
             _velocity.y += 3f;
+        }*/
+
+
+        bool enemyStomp = Physics2D.OverlapBox(_feet.transform.position, new Vector2(.95f, .13f), 0, _enemyLayer);
+        if (enemyStomp)
+        {
+            AIThinker enemy = Physics2D.OverlapBox(_feet.transform.position, new Vector2(.5f, .5f), 0, _enemyLayer).GetComponent<AIThinker>();
+            StartCoroutine(CinemachineCamShake.CamShakeCo(.1f, FindObjectOfType<CinemachineVirtualCamera>()));
+            enemy.isStunned = true;
+            _velocity.y += 2f * enemyStompCount * 1.5f;
+
+            if (enemyStompCount < 3)
+            {
+                enemyStompCount++;
+            }
         }
+
     }
 
     void Roll(InputAction.CallbackContext context)
@@ -509,11 +537,11 @@ public class PlayerController : MonoBehaviour
             {
                 if (_isDashing)
                 {
-                    StartCoroutine(PlayerRollCo(.33f));
+                    StartCoroutine(PlayerRollCo(.38f));
                 }
                 else
                 {
-                    StartCoroutine(PlayerRollCo(.17f));
+                    StartCoroutine(PlayerRollCo(.22f));
                 }
             }
             
@@ -526,15 +554,14 @@ public class PlayerController : MonoBehaviour
 
         float rollTimer = rollTime;
 
-        while(rollTimer > 0)
+        _rolling = true;
+
+        while(rollTimer > 0 && _rolling)
         {
-            if (!_rolling)
-            {
-                _rolling = true;
-            }
+            
             rollTimer -= GamePause.deltaTime;
 
-            _rb2d.AddForce(new Vector2(rollSpeed * rollForce * xDirect * _movementSpeedTiers[_currentSpeedTier], 0), ForceMode2D.Impulse);
+            _rb2d.AddForce(new Vector2(rollSpeed * rollForce * xDirect * _rollDistanceTiers[_currentSpeedTier], 0), ForceMode2D.Impulse);
 
             yield return null;
         }
@@ -552,9 +579,14 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireCube(_feet.transform.position, new Vector3(.95f, .13f, 0f));
+    }
+
     IEnumerator RollCooldownCo()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.27f);
         _canRoll = true;
     }
 

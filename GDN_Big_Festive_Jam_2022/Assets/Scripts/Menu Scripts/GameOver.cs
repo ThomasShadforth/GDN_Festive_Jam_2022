@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameOver : MonoBehaviour
 {
+    PlayerInputActions _input;
 
+    [SerializeField] GameObject _firstGameOverButton;
 
     // Start is called before the first frame update
     void Start()
@@ -14,6 +17,12 @@ public class GameOver : MonoBehaviour
         {
             AudioManager.instance.Play("GameOver");
         }
+
+        _input = new PlayerInputActions();
+        _input.UI.Enable();
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(_firstGameOverButton);
     }
 
     // Update is called once per frame
