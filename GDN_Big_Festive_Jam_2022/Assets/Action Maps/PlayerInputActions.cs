@@ -98,6 +98,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slam"",
+                    ""type"": ""Button"",
+                    ""id"": ""11bf11cf-0aaa-4f6b-b10d-746c386a8cf6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -345,19 +354,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ba861949-1627-4bd6-97d3-5e2702bab083"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Roll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""819b85cf-86d7-47a3-bf0b-a55a237586d1"",
-                    ""path"": ""<Keyboard>/downArrow"",
+                    ""path"": ""<Keyboard>/g"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -393,7 +391,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""TakePresent"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -404,8 +402,52 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/y"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard"",
                     ""action"": ""TakePresent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9137c9b7-d5d1-4205-b5e6-86c11259bb8b"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Slam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""84bb66a1-9e82-4d61-a782-ecc095b62720"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Slam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f9733123-1194-4c09-93dc-c7337224df1e"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Slam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2781ef1-4507-4fef-8f19-5219d05a402f"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Slam"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -995,6 +1037,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_DropPresent = m_Player.FindAction("DropPresent", throwIfNotFound: true);
         m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
         m_Player_TakePresent = m_Player.FindAction("TakePresent", throwIfNotFound: true);
+        m_Player_Slam = m_Player.FindAction("Slam", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1074,6 +1117,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_DropPresent;
     private readonly InputAction m_Player_Roll;
     private readonly InputAction m_Player_TakePresent;
+    private readonly InputAction m_Player_Slam;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1086,6 +1130,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @DropPresent => m_Wrapper.m_Player_DropPresent;
         public InputAction @Roll => m_Wrapper.m_Player_Roll;
         public InputAction @TakePresent => m_Wrapper.m_Player_TakePresent;
+        public InputAction @Slam => m_Wrapper.m_Player_Slam;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1119,6 +1164,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @TakePresent.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTakePresent;
                 @TakePresent.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTakePresent;
                 @TakePresent.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTakePresent;
+                @Slam.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlam;
+                @Slam.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlam;
+                @Slam.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlam;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1147,6 +1195,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @TakePresent.started += instance.OnTakePresent;
                 @TakePresent.performed += instance.OnTakePresent;
                 @TakePresent.canceled += instance.OnTakePresent;
+                @Slam.started += instance.OnSlam;
+                @Slam.performed += instance.OnSlam;
+                @Slam.canceled += instance.OnSlam;
             }
         }
     }
@@ -1284,6 +1335,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnDropPresent(InputAction.CallbackContext context);
         void OnRoll(InputAction.CallbackContext context);
         void OnTakePresent(InputAction.CallbackContext context);
+        void OnSlam(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

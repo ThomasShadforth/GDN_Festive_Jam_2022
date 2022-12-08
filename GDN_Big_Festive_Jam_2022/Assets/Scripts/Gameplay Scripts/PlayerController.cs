@@ -79,8 +79,18 @@ public class PlayerController : MonoBehaviour
     float _coyoteCounter;
     float _jumpPhase;
     bool _prevGrounded = false;
+    [HideInInspector]
+    public bool _beingMoved;
+
+    [Header("Slam Values:")]
+    [SerializeField] float[] slamRadiusTiers;
+
+    //Jumping used for input system checks
     bool _jumping;
+    //Ability booleans (Whether they're being used or not)
     bool _rolling;
+    bool _slamming;
+    bool _cancelledRoll;
     bool _canRoll;
 
     [Header("Knockback Values:")]
@@ -113,6 +123,9 @@ public class PlayerController : MonoBehaviour
         _input.Player.Dash.performed += SetPlayerDash;
         _input.Player.Dash.canceled += SetPlayerDash;
         _input.Player.Roll.performed += Roll;
+
+        _input.Player.Slam.started += Slam;
+
         _canRoll = true;
         _rb2d = GetComponent<Rigidbody2D>();
         _gravForce = Physics2D.gravity * _rb2d.mass;
@@ -129,11 +142,19 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading)
+        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading || _beingMoved || _slamming)
         {
             return;
         }
-        _desiredVelocity = new Vector2(_moveInput, 0) * Mathf.Max(((_maxSpeed * _movementSpeedTiers[_currentSpeedTier]) * dashModifier), 0);
+
+        if (!_cancelledRoll)
+        {
+            _desiredVelocity = new Vector2(_moveInput, 0) * Mathf.Max(((_maxSpeed * _movementSpeedTiers[_currentSpeedTier]) * dashModifier), 0);
+        }
+        else
+        {
+            _desiredVelocity = new Vector2(_rb2d.velocity.x * xDirect, _rb2d.velocity.y);
+        }
 
         
 
@@ -142,13 +163,13 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (GamePause.gamePaused)
+        if (GamePause.gamePaused || _beingMoved)
         {
             _rb2d.velocity = Vector2.zero;
             return;
         }
 
-        if (_isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading)
+        if (_isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading || _slamming)
         {
             return;
         }
@@ -223,7 +244,7 @@ public class PlayerController : MonoBehaviour
     {
         
 
-        if (GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading )
+        if (GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading || _beingMoved || _slamming)
         {
             return;
         }
@@ -237,8 +258,10 @@ public class PlayerController : MonoBehaviour
         if (_rolling)
         {
             _rolling = false;
-            
+            _cancelledRoll = true;
             StartCoroutine(RollCooldownCo());
+            StartCoroutine(CancelledRollEndCo());
+            //Note: Possibly add coroutine to handle the roll cancel momentum ending separately
         }
 
         _desiredJump = true;
@@ -252,8 +275,10 @@ public class PlayerController : MonoBehaviour
 
     void SetPlayerDash(InputAction.CallbackContext context)
     {
-        if(GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading)
+        if(GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading || _beingMoved || _slamming)
         {
+            _isDashing = false;
+
             return;
         }
 
@@ -431,7 +456,7 @@ public class PlayerController : MonoBehaviour
 
     void Throw(InputAction.CallbackContext context)
     {
-        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading)
+        if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading || _beingMoved || _slamming)
         {
             return;
         }
@@ -527,7 +552,7 @@ public class PlayerController : MonoBehaviour
     {
 
 
-        if (_rolling || _isKnocked || GamePause.gamePaused || GameManager.instance.isCountingDown || !_canRoll || UIFade.instance.fading)
+        if (_rolling || _isKnocked || GamePause.gamePaused || GameManager.instance.isCountingDown || !_canRoll || UIFade.instance.fading || _beingMoved || _slamming)
         {
             return;
         }
@@ -579,15 +604,83 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void OnDrawGizmosSelected()
+    void Slam(InputAction.CallbackContext context)
     {
-        Gizmos.DrawWireCube(_feet.transform.position, new Vector3(.95f, .13f, 0f));
+        if (GamePause.gamePaused || GameManager.instance.isCountingDown || UIFade.instance.fading || _rolling || _beingMoved)
+        {
+            return;
+        }
+
+        //Check if the player's bag has reached a certain threshold
+        if (grounded)
+        {
+            if (_currentSpeedTier >= 2)
+            {
+                _renderer.color = Color.blue;
+
+                Debug.Log("SLAM!");
+
+
+
+                Collider2D[] slammedEnemies = Physics2D.OverlapCircleAll(transform.position, slamRadiusTiers[_currentSpeedTier], _enemyLayer);
+
+                if (slammedEnemies.Length != 0)
+                {
+                    for (int i = 0; i < slammedEnemies.Length; i++)
+                    {
+                        AIThinker enemyToSlam = slammedEnemies[i].GetComponent<AIThinker>();
+
+                        enemyToSlam.isStunned = true;
+                        StartCoroutine(LaunchEnemyCo(enemyToSlam));
+
+                    }
+                }
+                else
+                {
+                    Debug.Log("AAAAAA");
+                }
+
+                StartCoroutine(CinemachineCamShake.CamShakeCo(.14f, FindObjectOfType<CinemachineVirtualCamera>()));
+                StartCoroutine(SetSlamFinishCo());
+            }
+        }
+
+
+    }
+
+    IEnumerator LaunchEnemyCo(AIThinker enemyToLaunch)
+    {
+        yield return new WaitForSeconds(.1f);
+        Vector2 slamKnockDir = enemyToLaunch.transform.position - transform.position;
+        slamKnockDir.y = .5f;
+        slamKnockDir = slamKnockDir.normalized;
+
+        enemyToLaunch.rb2d.velocity = new Vector2(slamKnockDir.x * 10, slamKnockDir.y * 20);
+
+        yield return new WaitForSeconds(.3f);
+
+        enemyToLaunch.rb2d.velocity = Vector2.zero;
+        
+    }
+
+    IEnumerator SetSlamFinishCo()
+    {
+        yield return new WaitForSeconds(.2f);
+        _slamming = false;
+        _renderer.color = Color.white;
     }
 
     IEnumerator RollCooldownCo()
     {
         yield return new WaitForSeconds(.27f);
         _canRoll = true;
+        //_cancelledRoll = false;
+    }
+
+    IEnumerator CancelledRollEndCo()
+    {
+        yield return new WaitForSeconds(.6f);
+        _cancelledRoll = false;
     }
 
     void FlipXScale()
@@ -597,6 +690,11 @@ public class PlayerController : MonoBehaviour
         scalar.x *= -1;
         transform.localScale = scalar;
         xDirect = -xDirect;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(transform.position, slamRadiusTiers[_currentSpeedTier]);
     }
 
     //Outline input methods

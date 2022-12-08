@@ -29,9 +29,10 @@ public class CheckForStunDecision : Decision
 
             if(thinker.presentTarget != null && thinker.isHoldingPresent)
             {
-                thinker.presentTarget.ResetParent(SetPresentDropDirection(thinker));
+                thinker.presentTarget.ResetParent(SetPresentDropDirection(thinker), CheckWallDist(thinker));
                 thinker.isHoldingPresent = false;
                 thinker.presentTarget = null;
+
             }
 
             return true;
@@ -45,5 +46,19 @@ public class CheckForStunDecision : Decision
     int SetPresentDropDirection(AIThinker thinker)
     {
         return thinker.transform.position.x < thinker.playerTarget.transform.position.x ? -1 : 1;
+    }
+
+    Transform CheckWallDist(AIThinker thinker)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(thinker.transform.position, thinker.transform.right, thinker.jumpCheckDist * SetPresentDropDirection(thinker), thinker.whatIsGround);
+
+        if (hit)
+        {
+            return thinker.otherSidePos;
+        }
+        else
+        {
+            return null;
+        }
     }
 }

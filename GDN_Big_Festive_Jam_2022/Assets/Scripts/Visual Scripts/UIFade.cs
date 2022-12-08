@@ -69,7 +69,7 @@ public class UIFade : MonoBehaviour
             {
                 fadeImage.gameObject.SetActive(false);
                 _shouldFadeFromBlack = false;
-                fading = false;
+                
             }
         }
     }
@@ -88,6 +88,7 @@ public class UIFade : MonoBehaviour
 
     public void FadeFromBlack()
     {
+        fading = false;
         _shouldFadeFromBlack = true;
         _shouldFadeToBlack = false;
     }

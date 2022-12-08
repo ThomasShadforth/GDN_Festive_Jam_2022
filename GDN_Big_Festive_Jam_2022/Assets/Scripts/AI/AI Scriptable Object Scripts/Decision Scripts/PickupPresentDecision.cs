@@ -23,10 +23,18 @@ public class PickupPresentDecision : Decision
             thinker.SetPresentParent();
             thinker.isHoldingPresent = true;
             thinker.playerTarget = GameObject.FindGameObjectWithTag("Player");*/
+
+            //thinker.heldPresentCount = 1;
+
             thinker.SetPoolPresentParent();
             thinker.isHoldingPresent = true;
             thinker.playerTarget = GameObject.FindGameObjectWithTag("Player");
 
+            return true;
+        } else if (thinker.AIHandPos.GetComponentInChildren<PresentObject>())
+        {
+            thinker.isHoldingPresent = true;
+            thinker.playerTarget = GameObject.FindGameObjectWithTag("Player");
             return true;
         }
         else

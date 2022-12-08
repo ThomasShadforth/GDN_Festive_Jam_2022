@@ -73,17 +73,39 @@ public class Goal : MonoBehaviour
             return;
         }
 
-        if (presentsRemaining > 0)
+        if (!context.started)
         {
-            GameManager.instance.ChangeGoalPresents(-_depositedPresents.Count);
-            GameManager.instance.ChangePresentCount(_depositedPresents.Count);
-            presentsRemaining += _depositedPresents.Count;
+            return;
+        }
 
-            Queue<GameObject> tempPresentsQueue = new Queue<GameObject>();
-            tempPresentsQueue = _depositedPresents;
+        if (_playerInRange)
+        {
+            if (presentsRemaining > 0 && GameManager.instance.goalPresents != 0)
+            {
+                GameManager.instance.ChangeGoalPresents(-_depositedPresents.Count);
+                GameManager.instance.ChangePresentCount(_depositedPresents.Count);
+                presentsRemaining += _depositedPresents.Count;
 
-            PresentObjectPool.instance.SetPoolQueue(tempPresentsQueue);
-            _depositedPresents.Clear();
+                int presentsCount = _depositedPresents.Count;
+                Debug.Log(presentsCount);
+                Debug.Log(PresentObjectPool.instance.GetPoolCount());
+
+                for(int i = 0; i < presentsCount; i++)
+                {
+                    GameObject present = _depositedPresents.Dequeue();
+                    PresentObjectPool.instance.AddToPool(present);
+                }
+
+                Debug.Log(PresentObjectPool.instance.GetPoolCount());
+
+                /*
+                Queue<GameObject> tempPresentsQueue = new Queue<GameObject>();
+                tempPresentsQueue = _depositedPresents;
+
+                PresentObjectPool.instance.SetPoolQueue(tempPresentsQueue);
+                _depositedPresents.Clear();
+                Debug.Log(PresentObjectPool.instance.GetPoolCount());*/
+            }
         }
     }
 
@@ -92,6 +114,11 @@ public class Goal : MonoBehaviour
         //Debug.Log("DEPOSITING");
 
         if (GamePause.gamePaused || GameManager.instance.isCountingDown)
+        {
+            return;
+        }
+
+        if (!context.started)
         {
             return;
         }
@@ -115,5 +142,9 @@ public class Goal : MonoBehaviour
         }
     }
 
-    
+    IEnumerator ClearQueueCo()
+    {
+        yield return new WaitForSeconds(.5f);
+    }
+
 }

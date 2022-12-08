@@ -52,9 +52,15 @@ public class PresentObject : MonoBehaviour
         }
     }
 
-    public void ResetParent(int directionToSet)
+    public void ResetParent(int directionToSet, Transform positionToSet)
     {
         transform.parent = null;
+        if(positionToSet != null)
+        {
+            transform.position = positionToSet.position;
+            directionToSet = -directionToSet;
+        }
+
         _rb2d.isKinematic = false;
         collider.enabled = true;
         _rb2d.velocity = new Vector2(directionToSet, .5f) * 6f;

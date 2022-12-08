@@ -19,7 +19,10 @@ public class AIThinker : MonoBehaviour
     public Present presentPrefab;
     public PresentObject presentTarget;
 
+    [HideInInspector] public int heldPresentCount = 0;
+
     public Transform AIHandPos;
+    public Transform otherSidePos;
     [SerializeField] Transform feetPos;
 
     public LayerMask presentsLayer;
@@ -85,12 +88,6 @@ public class AIThinker : MonoBehaviour
         }
     }
 
-    public void CreatePresent()
-    {
-        targetPresent = Instantiate(presentPrefab, AIHandPos.position, Quaternion.identity);
-        StartCoroutine(CinemachineCamShake.CamShakeCo(.1f, FindObjectOfType<CinemachineVirtualCamera>()));
-    }
-
     public void GetPresentFromPool()
     {
         GameObject present = PresentObjectPool.instance.GetFromPool();
@@ -99,23 +96,21 @@ public class AIThinker : MonoBehaviour
 
     public void SetPoolPresentParent()
     {
+        if(presentTarget.currentState != PresentStates.enemy)
+        {
+            presentTarget.ChangePresentState();
+        }
+
+        
         presentTarget.transform.parent = AIHandPos;
         presentTarget.transform.position = AIHandPos.position;
+        presentTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         presentTarget.GetComponent<Rigidbody2D>().isKinematic = true;
         presentTarget.collider.enabled = false;
-        presentTarget.ChangePresentState();
-        presentTarget.handToAppearIn = AIHandPos;
+        
     }
 
-    public void SetPresentParent()
-    {
-        targetPresent.transform.parent = AIHandPos;
-        targetPresent.transform.position = AIHandPos.position;
-        targetPresent.GetComponent<Rigidbody2D>().isKinematic = true;
-        targetPresent._collider.enabled = false;
-        targetPresent.ChangePresentState();
-    }
-
+    
     public void SetWaitTimer()
     {
         waitTimer = waitTime;
