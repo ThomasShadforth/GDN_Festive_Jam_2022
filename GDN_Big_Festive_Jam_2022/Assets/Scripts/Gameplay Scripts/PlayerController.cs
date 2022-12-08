@@ -122,9 +122,11 @@ public class PlayerController : MonoBehaviour
         _input.Player.Jump.performed += PlayerJump;
         _input.Player.Dash.performed += SetPlayerDash;
         _input.Player.Dash.canceled += SetPlayerDash;
-        _input.Player.Roll.performed += Roll;
+        //_input.Player.Roll.performed += Roll;
 
-        _input.Player.Slam.started += Slam;
+        //_input.Player.Slam.started += Slam;
+
+        _input.Player.ActionButton.performed += RollOrSlam;
 
         _canRoll = true;
         _rb2d = GetComponent<Rigidbody2D>();
@@ -240,62 +242,7 @@ public class PlayerController : MonoBehaviour
         _rb2d.velocity = _velocity;
     }
 
-    void PlayerJump(InputAction.CallbackContext context)
-    {
-        
-
-        if (GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading || _beingMoved || _slamming)
-        {
-            return;
-        }
-
-        if (!context.performed)
-        {
-            return;
-        }
-
-
-        if (_rolling)
-        {
-            _rolling = false;
-            _cancelledRoll = true;
-            StartCoroutine(RollCooldownCo());
-            StartCoroutine(CancelledRollEndCo());
-            //Note: Possibly add coroutine to handle the roll cancel momentum ending separately
-        }
-
-        _desiredJump = true;
-
-        if (_isJumping)
-        {
-            remainingJumps--;
-            
-        }
-    }
-
-    void SetPlayerDash(InputAction.CallbackContext context)
-    {
-        if(GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading || _beingMoved || _slamming)
-        {
-            _isDashing = false;
-
-            return;
-        }
-
-        if (context.performed)
-        {
-            //Set the player to dash
-            dashModifier = 1.5f;
-            _isDashing = true;
-            AfterImageObjectPool.instance.GetFromPool();
-            _lastImageXPos = transform.position.x;
-        } else if (context.canceled)
-        {
-            //Cancel the dash (Set modifier back to normal)
-            dashModifier = 1f;
-            _isDashing = false;
-        }
-    }
+    #region Movement, Height Maintenance
 
     void PlayerMove()
     {
@@ -359,7 +306,9 @@ public class PlayerController : MonoBehaviour
 
         return (rayHitGround, hit);
     }
+    #endregion
 
+    #region Jump
     void Jump()
     {
         if (grounded)
@@ -429,28 +378,65 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    
+    #endregion
 
-    void IncreasePresentNumb()
+    #region Player Input Checks
+
+    void PlayerJump(InputAction.CallbackContext context)
     {
-        _presentCounter++;
-        CheckPresentCount(_presentCounter);
+
+
+        if (GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading || _beingMoved || _slamming)
+        {
+            return;
+        }
+
+        if (!context.performed)
+        {
+            return;
+        }
+
+
+        if (_rolling)
+        {
+            _rolling = false;
+            _cancelledRoll = true;
+            GetComponent<PlayerRoll>().PlayerRollAction(false);
+            StartCoroutine(RollCooldownCo());
+            StartCoroutine(CancelledRollEndCo());
+            //Note: Possibly add coroutine to handle the roll cancel momentum ending separately
+        }
+
+        _desiredJump = true;
+
+        if (_isJumping)
+        {
+            remainingJumps--;
+        }
     }
 
-    public void CheckPresentCount(int presentNo)
+    void SetPlayerDash(InputAction.CallbackContext context)
     {
-        
-        if (presentNo >= _maxPresentTiers[_currentSpeedTier])
+        if (GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading || _beingMoved || _slamming)
         {
-            _currentSpeedTier++;
-            _sack.transform.localScale += new Vector3(0, 1, 0);
-        } else if(_currentSpeedTier > 0)
+            _isDashing = false;
+
+            return;
+        }
+
+        if (context.performed)
         {
-            if (presentNo < _maxPresentTiers[_currentSpeedTier - 1])
-            {
-                _currentSpeedTier--;
-                _sack.transform.localScale += new Vector3(0, -1, 0);
-            }
+            //Set the player to dash
+            dashModifier = 1.5f;
+            _isDashing = true;
+            AfterImageObjectPool.instance.GetFromPool();
+            _lastImageXPos = transform.position.x;
+        }
+        else if (context.canceled)
+        {
+            //Cancel the dash (Set modifier back to normal)
+            dashModifier = 1f;
+            _isDashing = false;
         }
     }
 
@@ -518,20 +504,7 @@ public class PlayerController : MonoBehaviour
 
     public void CheckForEnemyStomp()
     {
-        /*
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, _enemyStompLength, _enemyLayer);
-
-        Debug.DrawRay(transform.position, Vector2.down * _enemyStompLength);
-
-        if (hit)
-        {
-            AIThinker enemy = hit.collider.gameObject.GetComponent<AIThinker>();
-            StartCoroutine(CinemachineCamShake.CamShakeCo(.1f, FindObjectOfType<CinemachineVirtualCamera>()));
-            enemy.isStunned = true;
-            _velocity.y += 3f;
-        }*/
-
-
+        
         bool enemyStomp = Physics2D.OverlapBox(_feet.transform.position, new Vector2(.95f, .13f), 0, _enemyLayer);
         if (enemyStomp)
         {
@@ -546,6 +519,20 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+    }
+
+    void RollOrSlam(InputAction.CallbackContext context)
+    {
+        if(_currentSpeedTier < 2)
+        {
+            //Roll
+            Roll(context);
+        }
+        else
+        {
+            //Slam
+            Slam(context);
+        }
     }
 
     void Roll(InputAction.CallbackContext context)
@@ -563,6 +550,7 @@ public class PlayerController : MonoBehaviour
                 if (_isDashing)
                 {
                     StartCoroutine(PlayerRollCo(.38f));
+                    
                 }
                 else
                 {
@@ -575,6 +563,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator PlayerRollCo(float rollSpeed)
     {
+        GetComponent<PlayerRoll>().PlayerRollAction(true);
         _renderer.color = Color.yellow;
 
         float rollTimer = rollTime;
@@ -601,6 +590,8 @@ public class PlayerController : MonoBehaviour
 
             StartCoroutine(RollCooldownCo());
         }
+
+        GetComponent<PlayerRoll>().PlayerRollAction(false);
 
     }
 
@@ -683,6 +674,9 @@ public class PlayerController : MonoBehaviour
         _cancelledRoll = false;
     }
 
+    #endregion
+
+    #region Misc
     void FlipXScale()
     {
         _facingRight = !_facingRight;
@@ -692,10 +686,29 @@ public class PlayerController : MonoBehaviour
         xDirect = -xDirect;
     }
 
+    public void CheckPresentCount(int presentNo)
+    {
+
+        if (presentNo >= _maxPresentTiers[_currentSpeedTier])
+        {
+            _currentSpeedTier++;
+            _sack.transform.localScale += new Vector3(0, 1, 0);
+        }
+        else if (_currentSpeedTier > 0)
+        {
+            if (presentNo < _maxPresentTiers[_currentSpeedTier - 1])
+            {
+                _currentSpeedTier--;
+                _sack.transform.localScale += new Vector3(0, -1, 0);
+            }
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(transform.position, slamRadiusTiers[_currentSpeedTier]);
     }
 
+    #endregion
     //Outline input methods
 }

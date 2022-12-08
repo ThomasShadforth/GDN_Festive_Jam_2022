@@ -165,6 +165,7 @@ public class GameManager : MonoBehaviour
     IEnumerator LoadGameOverCo()
     {
         yield return new WaitForSeconds(1f);
+        FindObjectOfType<PlayerController>()._input.Dispose();
         SceneIndexer.lastSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene("GameOver");
     }

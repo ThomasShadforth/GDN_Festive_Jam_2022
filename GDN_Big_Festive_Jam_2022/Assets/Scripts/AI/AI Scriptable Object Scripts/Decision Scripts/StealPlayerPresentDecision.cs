@@ -19,7 +19,7 @@ public class StealPlayerPresentDecision : Decision
 
         if (hit)
         {
-            if(GameManager.instance.presentCount > 0)
+            if(GameManager.instance.presentCount > 0 && !thinker.isHoldingPresent)
             {
                 
                 GameManager.instance.ChangePresentCount(-1);

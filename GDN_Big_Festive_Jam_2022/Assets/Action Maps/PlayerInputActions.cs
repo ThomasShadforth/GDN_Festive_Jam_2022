@@ -107,6 +107,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ActionButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""3949b4a5-453f-41e4-93c9-4c08cae15967"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -256,7 +265,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""0b75eb4f-d8a7-41f0-81dc-4c4484abff09"",
-                    ""path"": ""<Keyboard>/o"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -448,6 +457,39 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""Slam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2773578e-dc74-4f03-bcbd-9564c18393d0"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""ActionButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""50abfcd9-8186-4ebe-985e-42d82fca1863"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ActionButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d268b8d1-12eb-4faa-85a7-56c0e6eb1218"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ActionButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1038,6 +1080,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
         m_Player_TakePresent = m_Player.FindAction("TakePresent", throwIfNotFound: true);
         m_Player_Slam = m_Player.FindAction("Slam", throwIfNotFound: true);
+        m_Player_ActionButton = m_Player.FindAction("ActionButton", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1118,6 +1161,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Roll;
     private readonly InputAction m_Player_TakePresent;
     private readonly InputAction m_Player_Slam;
+    private readonly InputAction m_Player_ActionButton;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1131,6 +1175,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Roll => m_Wrapper.m_Player_Roll;
         public InputAction @TakePresent => m_Wrapper.m_Player_TakePresent;
         public InputAction @Slam => m_Wrapper.m_Player_Slam;
+        public InputAction @ActionButton => m_Wrapper.m_Player_ActionButton;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1167,6 +1212,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Slam.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlam;
                 @Slam.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlam;
                 @Slam.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlam;
+                @ActionButton.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnActionButton;
+                @ActionButton.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnActionButton;
+                @ActionButton.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnActionButton;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1198,6 +1246,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Slam.started += instance.OnSlam;
                 @Slam.performed += instance.OnSlam;
                 @Slam.canceled += instance.OnSlam;
+                @ActionButton.started += instance.OnActionButton;
+                @ActionButton.performed += instance.OnActionButton;
+                @ActionButton.canceled += instance.OnActionButton;
             }
         }
     }
@@ -1336,6 +1387,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnRoll(InputAction.CallbackContext context);
         void OnTakePresent(InputAction.CallbackContext context);
         void OnSlam(InputAction.CallbackContext context);
+        void OnActionButton(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

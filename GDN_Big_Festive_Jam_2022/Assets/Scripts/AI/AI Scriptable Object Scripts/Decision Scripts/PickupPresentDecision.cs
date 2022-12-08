@@ -17,7 +17,7 @@ public class PickupPresentDecision : Decision
     {
         RaycastHit2D hit = Physics2D.Raycast(thinker.transform.position, Vector2.right, thinker.minStealDistance * CheckPresentDirection(thinker), thinker.presentsLayer);
 
-        if (hit)
+        if (hit && !thinker.isHoldingPresent)
         {
             /*
             thinker.SetPresentParent();

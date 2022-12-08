@@ -1566,7 +1566,7 @@ MonoBehaviour:
   sounds:
   - name: TitleScreen
     clip: {fileID: 8300000, guid: e8fd2d7a9219f31418a54113c379cd46, type: 3}
-    volume: 0.8
+    volume: 0.641
     pitch: 1
     loop: 1
     source: {fileID: 0}
