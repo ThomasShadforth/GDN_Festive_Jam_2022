@@ -48,6 +48,7 @@ public class AIThinker : MonoBehaviour
     public float minPatrolDist = .5f;
     public float minStealDistance = 1.5f;
     public float minChaseDistance = 4f;
+    public bool isBeingLaunched;
 
     public int currentWaypoint = 0;
 

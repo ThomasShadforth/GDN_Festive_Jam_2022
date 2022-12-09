@@ -161,6 +161,13 @@ public class PlayerController : MonoBehaviour
             _desiredVelocity = new Vector2(Mathf.Abs(_rb2d.velocity.x) * xDirect, _rb2d.velocity.y);
         }
 
+        bool cancelRoll = Physics2D.Raycast(transform.position, transform.right, .6f * xDirect, _whatIsGround);
+        Debug.DrawRay(transform.position, transform.right * .6f * xDirect, Color.red);
+
+        if(_cancelledRoll && cancelRoll)
+        {
+            EndRollCancel();
+        }
         
 
         //Debug.Log(_desiredJump);
@@ -189,7 +196,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!_prevGrounded)
             {
-
+                EndRollCancel();
             }
         }
 
@@ -243,7 +250,14 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        _prevGrounded = grounded;
+
         _rb2d.velocity = _velocity;
+    }
+
+    private void EndRollCancel()
+    {
+        _cancelledRoll = false;
     }
 
     #region Movement, Height Maintenance
@@ -326,6 +340,7 @@ public class PlayerController : MonoBehaviour
         {
             _coyoteCounter = _coyoteTime;
             _isJumping = false;
+            
             _jumpPhase = 0;
             enemyStompCount = 1;
         }
@@ -411,7 +426,6 @@ public class PlayerController : MonoBehaviour
         if (_coyoteCounter > 0 || (_isJumping && remainingJumps > 0))
         {
             
-            
             _coyoteCounter = 0f;
             float jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * _jumpHeight);
             _isJumping = true;
@@ -456,7 +470,7 @@ public class PlayerController : MonoBehaviour
 
             GetComponent<PlayerRoll>().PlayerRollAction(false);
             StartCoroutine(RollCooldownCo());
-            
+            Invoke("EndRollCancel", 1.2f);
             //Note: Possibly add coroutine to handle the roll cancel momentum ending separately
         }
 
@@ -471,6 +485,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    
 
     void SetPlayerDash(InputAction.CallbackContext context)
     {
@@ -682,8 +698,11 @@ public class PlayerController : MonoBehaviour
                     {
                         AIThinker enemyToSlam = slammedEnemies[i].GetComponent<AIThinker>();
 
-                        enemyToSlam.isStunned = true;
-                        StartCoroutine(LaunchEnemyCo(enemyToSlam));
+                        if (!enemyToSlam.isBeingLaunched)
+                        {
+                            enemyToSlam.isStunned = true;
+                            StartCoroutine(LaunchEnemyCo(enemyToSlam));
+                        }
 
                     }
                 }
@@ -702,15 +721,19 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator LaunchEnemyCo(AIThinker enemyToLaunch)
     {
+        enemyToLaunch.isBeingLaunched = true;
         yield return new WaitForSeconds(.1f);
         Vector2 slamKnockDir = enemyToLaunch.transform.position - transform.position;
         slamKnockDir.y = .5f;
         slamKnockDir = slamKnockDir.normalized;
 
-        enemyToLaunch.rb2d.velocity = new Vector2(slamKnockDir.x * 10, slamKnockDir.y * 20);
+        if (enemyToLaunch.grounded)
+        {
+            enemyToLaunch.rb2d.velocity = new Vector2(slamKnockDir.x * 10, slamKnockDir.y * 20);
+        }
 
         yield return new WaitForSeconds(.3f);
-
+        enemyToLaunch.isBeingLaunched = false;
         enemyToLaunch.rb2d.velocity = Vector2.zero;
         
     }
