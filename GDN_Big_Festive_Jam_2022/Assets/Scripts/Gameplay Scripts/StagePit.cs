@@ -31,6 +31,12 @@ public class StagePit : MonoBehaviour
             present.transform.parent = null;
             present.transform.position = present.originalPosition;
         }
+
+        if (other.GetComponent<AIThinker>())
+        {
+            AIThinker enemy = other.GetComponent<AIThinker>();
+            enemy.transform.position = enemy.originalPosition;
+        }
     }
 
     IEnumerator MovePlayerCo(PlayerController player)

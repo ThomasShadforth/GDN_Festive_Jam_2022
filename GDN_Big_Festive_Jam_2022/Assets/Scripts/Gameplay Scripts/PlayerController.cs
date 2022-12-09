@@ -410,7 +410,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (_isDashing)
                 {
-                    StartCoroutine(PlayerRollCo(.38f));
+                    StartCoroutine(PlayerRollCo(.28f));
 
                 }
                 else
@@ -447,7 +447,7 @@ public class PlayerController : MonoBehaviour
     {
 
 
-        if (GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading || _beingMoved || _slamming)
+        if (GamePause.gamePaused || _isKnocked || GameManager.instance.isCountingDown || UIFade.instance.fading || _beingMoved || _slamming || _isKnocked)
         {
             return;
         }
@@ -596,7 +596,12 @@ public class PlayerController : MonoBehaviour
 
     void RollOrSlam(InputAction.CallbackContext context)
     {
-        if(_currentSpeedTier < 2)
+        if (_rolling || _isKnocked || GamePause.gamePaused || GameManager.instance.isCountingDown || !_canRoll || UIFade.instance.fading || _beingMoved || _slamming)
+        {
+            return;
+        }
+
+        if (_currentSpeedTier < 2)
         {
             //Roll
             Roll(context);
@@ -612,10 +617,7 @@ public class PlayerController : MonoBehaviour
     {
 
 
-        if (_rolling || _isKnocked || GamePause.gamePaused || GameManager.instance.isCountingDown || !_canRoll || UIFade.instance.fading || _beingMoved || _slamming)
-        {
-            return;
-        }
+        
         if (context.performed)
         {
             _desiredRoll = true;
@@ -674,7 +676,7 @@ public class PlayerController : MonoBehaviour
 
     void Slam(InputAction.CallbackContext context)
     {
-        if (GamePause.gamePaused || GameManager.instance.isCountingDown || UIFade.instance.fading || _rolling || _beingMoved)
+        if (GamePause.gamePaused || GameManager.instance.isCountingDown || UIFade.instance.fading || _rolling || _beingMoved || _isKnocked)
         {
             return;
         }
@@ -710,6 +712,22 @@ public class PlayerController : MonoBehaviour
                 {
                     Debug.Log("AAAAAA");
                 }
+
+                Collider2D[] slammedDestructibles = Physics2D.OverlapCircleAll(transform.position, slamRadiusTiers[_currentSpeedTier], _whatIsGround);
+
+                if(slammedDestructibles != null)
+                {
+                    for(int i = 0; i < slammedDestructibles.Length; i++)
+                    {
+                        IDamageInterface objectToDamage = slammedDestructibles[i].GetComponent<IDamageInterface>();
+
+                        if(objectToDamage != null)
+                        {
+                            objectToDamage.DamageObject(1);
+                        }
+                    }
+                }
+
 
                 StartCoroutine(CinemachineCamShake.CamShakeCo(.14f, FindObjectOfType<CinemachineVirtualCamera>()));
                 StartCoroutine(SetSlamFinishCo());

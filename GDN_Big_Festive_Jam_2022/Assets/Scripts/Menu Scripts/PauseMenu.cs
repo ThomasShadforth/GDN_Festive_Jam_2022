@@ -30,6 +30,11 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame(InputAction.CallbackContext context)
     {
+        if(UIFade.instance.fading || GameManager.instance.isCountingDown)
+        {
+            return;
+        }
+
         if (context.started)
         {
             if (!_pauseMenu.activeInHierarchy)

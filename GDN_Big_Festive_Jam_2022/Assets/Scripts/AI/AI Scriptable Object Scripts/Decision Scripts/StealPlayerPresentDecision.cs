@@ -33,10 +33,17 @@ public class StealPlayerPresentDecision : Decision
                 
                 return true;
             }
+            
             else
             {
                 return false;
             }
+        }
+        else if (thinker.AIHandPos.GetComponentInChildren<PresentObject>())
+        {
+            thinker.isHoldingPresent = true;
+            thinker.playerTarget = GameObject.FindGameObjectWithTag("Player");
+            return true;
         }
         else
         {

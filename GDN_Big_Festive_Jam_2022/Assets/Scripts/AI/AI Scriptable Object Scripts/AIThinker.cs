@@ -25,6 +25,8 @@ public class AIThinker : MonoBehaviour
     public Transform otherSidePos;
     [SerializeField] Transform feetPos;
 
+    public Vector2 originalPosition;
+
     public LayerMask presentsLayer;
     public LayerMask playerLayer;
     public LayerMask whatIsGround;
@@ -58,6 +60,8 @@ public class AIThinker : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         waitTimer = waitTime;
         stunTimer = stunTime;
+
+        originalPosition = transform.position;
     }
 
 
