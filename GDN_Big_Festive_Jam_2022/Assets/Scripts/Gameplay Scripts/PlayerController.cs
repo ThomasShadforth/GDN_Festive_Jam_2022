@@ -53,7 +53,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float[] _rollDistanceTiers;
     [SerializeField] int[] _maxPresentTiers;
     [SerializeField] float rollTime;
+    [SerializeField] float _rollBuffer = .15f;
     int _currentSpeedTier;
+    float _rollBufferCount;
+    bool _desiredRoll = false;
 
     Vector2 _desiredVelocity;
     Vector2 _velocity;
@@ -155,7 +158,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            _desiredVelocity = new Vector2(_rb2d.velocity.x * xDirect, _rb2d.velocity.y);
+            _desiredVelocity = new Vector2(Mathf.Abs(_rb2d.velocity.x) * xDirect, _rb2d.velocity.y);
         }
 
         
@@ -229,6 +232,7 @@ public class PlayerController : MonoBehaviour
 
         PlayerMove();
         Jump();
+        RollAction();
 
         if (_isDashing)
         {
@@ -246,8 +250,15 @@ public class PlayerController : MonoBehaviour
 
     void PlayerMove()
     {
-        _maxSpeedChange = _acceleration * GamePause.deltaTime;
-        _velocity.x = Mathf.MoveTowards(_velocity.x, _desiredVelocity.x, _maxSpeedChange);
+        if (!_cancelledRoll)
+        {
+            _maxSpeedChange = _acceleration * GamePause.fixedDeltaTime;
+            _velocity.x = Mathf.MoveTowards(_velocity.x, _desiredVelocity.x, _maxSpeedChange);
+        }
+        else
+        {
+            _velocity.x = _desiredVelocity.x;
+        }
     }
 
     private void MaintainHeight(RaycastHit2D hit)
@@ -320,7 +331,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            _coyoteCounter -= GamePause.deltaTime;
+            _coyoteCounter -= GamePause.fixedDeltaTime;
         }
 
         if (_desiredJump)
@@ -330,7 +341,7 @@ public class PlayerController : MonoBehaviour
             _jumpBufferCount = _jumpBuffer;
         } else if(!_desiredJump && _jumpBufferCount > 0)
         {
-            _jumpBufferCount -= GamePause.deltaTime;
+            _jumpBufferCount -= GamePause.fixedDeltaTime;
         }
 
         if(_jumpBufferCount > 0)
@@ -357,6 +368,42 @@ public class PlayerController : MonoBehaviour
         }
 
         //Add jump button to action map
+    }
+
+    void RollAction()
+    {
+        if (_desiredRoll)
+        {
+            _desiredRoll = false;
+            _rollBufferCount = _rollBuffer;
+        } else if(!_desiredRoll && _rollBufferCount > 0)
+        {
+            _rollBufferCount -= GamePause.fixedDeltaTime;
+        }
+
+        if(_rollBufferCount > 0)
+        {
+            CheckForRoll();
+        }
+    }
+
+    void CheckForRoll()
+    {
+        if (grounded)
+        {
+            if (!_rolling && _canRoll)
+            {
+                if (_isDashing)
+                {
+                    StartCoroutine(PlayerRollCo(.38f));
+
+                }
+                else
+                {
+                    StartCoroutine(PlayerRollCo(.22f));
+                }
+            }
+        }
     }
 
     private void JumpAction()
@@ -401,9 +448,15 @@ public class PlayerController : MonoBehaviour
         {
             _rolling = false;
             _cancelledRoll = true;
+
+            Debug.Log(_rb2d.velocity.x);
+                
+            //_rb2d.velocity = new Vector2(5 * xDirect, _rb2d.velocity.y);
+            
+
             GetComponent<PlayerRoll>().PlayerRollAction(false);
             StartCoroutine(RollCooldownCo());
-            StartCoroutine(CancelledRollEndCo());
+            
             //Note: Possibly add coroutine to handle the roll cancel momentum ending separately
         }
 
@@ -412,6 +465,10 @@ public class PlayerController : MonoBehaviour
         if (_isJumping)
         {
             remainingJumps--;
+            if (_cancelledRoll)
+            {
+                StartCoroutine(CancelledRollEndCo());
+            }
         }
     }
 
@@ -545,8 +602,12 @@ public class PlayerController : MonoBehaviour
         }
         if (context.performed)
         {
+            _desiredRoll = true;
+
+
             if (grounded)
             {
+                /*
                 if (_isDashing)
                 {
                     StartCoroutine(PlayerRollCo(.38f));
@@ -555,7 +616,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     StartCoroutine(PlayerRollCo(.22f));
-                }
+                }*/
             }
             
         }
@@ -575,7 +636,7 @@ public class PlayerController : MonoBehaviour
             
             rollTimer -= GamePause.deltaTime;
 
-            _rb2d.AddForce(new Vector2(rollSpeed * rollForce * xDirect * _rollDistanceTiers[_currentSpeedTier], 0), ForceMode2D.Impulse);
+            _rb2d.AddForce(new Vector2(rollSpeed * rollForce * xDirect * _rollDistanceTiers[_currentSpeedTier] * GamePause.deltaTime, 0), ForceMode2D.Impulse);
 
             yield return null;
         }
@@ -670,7 +731,15 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator CancelledRollEndCo()
     {
-        yield return new WaitForSeconds(.6f);
+        float cancelRollTimer = .6f;
+
+        while(cancelRollTimer > 0)
+        {
+            cancelRollTimer -= GamePause.deltaTime;
+
+            yield return null;
+        }
+
         _cancelledRoll = false;
     }
 

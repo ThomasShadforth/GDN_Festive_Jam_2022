@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Project
+  m_Title: Game
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 60
+  controlID: 94
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 61
+  controlID: 95
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 8096}
   vertical: 0
-  controlID: 62
+  controlID: 96
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -426,9 +426,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      m_SelectedIDs: 9e650000
       m_LastClickedID: 0
-      m_ExpandedIDs: 70f4ffffc0f4ffffe4f6ffff32f7ffff40f7ffff86f9ffff0afbffffba670000d8670000548d0000
+      m_ExpandedIDs: e6a6ffffe0a9ffff02c1ffff2ac2ffff54c6ffff9ec6ffffbcc6ffffc8c6ffff16c7ffff1ec7ffffbec8ffffb6c9ffff00caffff20ccffff2eccffff9eccffffa6ccffff02ceffffa4d1fffff0d1ffff10d4ffff1ed4ffff8ed4ffff96d4ffff46d8ffff92d8ffffb0d8ffffbcd8ffff0ad9ffff12d9ffff2adaffff76daffff96dcffffa4dcffff14ddffff1cddffffc8e2ffff76eaffff24f1ffff4cf2ffff70f7ffffacf9ffff0afbfffff4ffffff16890000868900003a8a000078980000a01b0100be1b0100
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -699,9 +699,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 63.78316, y: 12.53102, z: -0.8709744}
+    m_Target: {x: 23.89927, y: 17.18921, z: 0.20614025}
     speed: 2
-    m_Value: {x: 63.737617, y: 12.328808, z: -0.86151963}
+    m_Value: {x: 23.89927, y: 17.18921, z: 0.20614025}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -752,9 +752,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 21.956118
+    m_Target: 52.75626
     speed: 2
-    m_Value: 21.01064
+    m_Value: 52.75626
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -820,22 +820,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/Gameplay Scripts
+    - Assets/Scenes
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts/Gameplay Scripts
+  - Assets/Scenes
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Unity Projects\Github\GDN_Festive_Jam_2022\GDN_Big_Festive_Jam_2022
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 144}
-    m_SelectedIDs: 8a660000
-    m_LastClickedID: 26250
-    m_ExpandedIDs: 000000005466000056660000586600005a6600005c6600005e660000606600006266000064660000
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 7c650000
+    m_LastClickedID: 25980
+    m_ExpandedIDs: 000000004465000046650000486500004a6500004c6500004e650000506500005265000054650000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -863,7 +863,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000005466000056660000586600005a6600005c6600005e660000606600006266000064660000
+    m_ExpandedIDs: 000000004465000046650000486500004a6500004c6500004e650000506500005265000054650000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -890,7 +890,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000aed5ffff
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -907,7 +907,7 @@ MonoBehaviour:
       m_IsRenaming: 0
       m_OriginalEventType: 11
       m_IsRenamingFilename: 1
-      m_ClientGUIView: {fileID: 9}
+      m_ClientGUIView: {fileID: 11}
     m_CreateAssetUtility:
       m_EndAction: {fileID: 0}
       m_InstanceID: 0

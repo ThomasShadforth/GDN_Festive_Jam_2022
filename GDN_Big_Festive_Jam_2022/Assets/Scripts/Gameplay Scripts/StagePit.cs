@@ -23,6 +23,14 @@ public class StagePit : MonoBehaviour
             PlayerController player = other.GetComponent<PlayerController>();
             StartCoroutine(MovePlayerCo(player));
         }
+
+        if(other.GetComponent<PresentObject>())
+        {
+
+            PresentObject present = other.GetComponent<PresentObject>();
+            present.transform.parent = null;
+            present.transform.position = present.originalPosition;
+        }
     }
 
     IEnumerator MovePlayerCo(PlayerController player)

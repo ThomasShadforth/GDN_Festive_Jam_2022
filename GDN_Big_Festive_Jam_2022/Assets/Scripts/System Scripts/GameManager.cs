@@ -126,9 +126,23 @@ public class GameManager : MonoBehaviour
         {
             //win the level, move to next one
             //Debug.Log("LEVEL COMPLETE!");
+            StartCoroutine(LoadGameWinCo());
         }
 
     }
+
+    IEnumerator LoadGameWinCo()
+    {
+        UIFade.instance.FadeToBlack();
+
+        yield return new WaitForSeconds(1f);
+
+        //dispose of player input
+
+        FindObjectOfType<PlayerController>()._input.Dispose();
+        SceneManager.LoadScene("GameWin");
+    }
+
 
     void GameOver()
     {

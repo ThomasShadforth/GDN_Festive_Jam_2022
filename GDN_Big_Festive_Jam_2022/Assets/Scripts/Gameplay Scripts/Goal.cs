@@ -16,6 +16,11 @@ public class Goal : MonoBehaviour
 
     Queue<GameObject> _depositedPresents = new Queue<GameObject>();
 
+    private void OnDisable()
+    {
+        _input.Dispose();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -127,12 +132,14 @@ public class Goal : MonoBehaviour
         {
             if (GameManager.instance.presentCount > 0)
             {
-                GameManager.instance.ChangeGoalPresents(1);
-                GameManager.instance.ChangePresentCount(-1);
                 GameObject presentToDeposit = PresentObjectPool.instance.DepositPresent();
                 _depositedPresents.Enqueue(presentToDeposit);
                 presentsRemaining--;
-                Debug.Log(_depositedPresents.Count);
+
+                GameManager.instance.ChangeGoalPresents(1);
+                GameManager.instance.ChangePresentCount(-1);
+                
+                
                 
             }
             else

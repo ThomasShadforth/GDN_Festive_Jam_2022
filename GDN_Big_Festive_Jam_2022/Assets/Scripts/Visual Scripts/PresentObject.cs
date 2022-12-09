@@ -11,6 +11,9 @@ public class PresentObject : MonoBehaviour
 
     Rigidbody2D _rb2d;
 
+    [HideInInspector]
+    public Vector2 originalPosition;
+
     bool _canPickup;
     [HideInInspector]
     public bool _droppedOrThrown;
@@ -35,6 +38,9 @@ public class PresentObject : MonoBehaviour
     {
         _rb2d = GetComponent<Rigidbody2D>();
         Invoke("EnableCollider", .5f);
+
+        originalPosition = transform.position;
+
     }
 
     // Update is called once per frame
@@ -55,14 +61,15 @@ public class PresentObject : MonoBehaviour
     public void ResetParent(int directionToSet, Transform positionToSet)
     {
         transform.parent = null;
-        if(positionToSet != null)
+        collider.enabled = true;
+        if (positionToSet != null)
         {
             transform.position = positionToSet.position;
             directionToSet = -directionToSet;
         }
 
         _rb2d.isKinematic = false;
-        collider.enabled = true;
+        
         _rb2d.velocity = new Vector2(directionToSet, .5f) * 6f;
         ChangePresentState();
     }
