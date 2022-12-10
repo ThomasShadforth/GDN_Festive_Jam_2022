@@ -149,6 +149,7 @@ public class PlayerController : MonoBehaviour
     {
         if (GamePause.gamePaused || _isKnocked || _rolling || GameManager.instance.isCountingDown || UIFade.instance.fading || _beingMoved || _slamming)
         {
+            
             return;
         }
 
@@ -175,9 +176,14 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        (bool rayHitGround, RaycastHit2D hit) = RaycastToGround();
+
+        grounded = CheckGrounded(rayHitGround, hit);
+
         if (GamePause.gamePaused || _beingMoved)
         {
             _rb2d.velocity = Vector2.zero;
+            _rb2d.gravityScale = 0f;
             return;
         }
 
@@ -186,9 +192,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        (bool rayHitGround, RaycastHit2D hit) = RaycastToGround();
-
-        grounded = CheckGrounded(rayHitGround, hit);
+        
 
         //Debug.Log(grounded);
 
