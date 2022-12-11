@@ -20,6 +20,7 @@ public class PauseMenu : MonoBehaviour
         _input = new PlayerInputActions();
         _input.Player.Enable();
         _input.Player.Pause.started += PauseGame;
+        _input.Player.Restart.started += RestartLevelInput;
     }
 
     // Update is called once per frame
@@ -73,6 +74,11 @@ public class PauseMenu : MonoBehaviour
         _settingsMenu.SetActive(false);
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(_menuButtonSelected);
+    }
+
+    void RestartLevelInput(InputAction.CallbackContext context)
+    {
+        StartCoroutine(RestartLevelCo());
     }
 
     public void RestartLevel()

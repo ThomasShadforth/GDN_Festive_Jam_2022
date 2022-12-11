@@ -60,15 +60,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Roll",
-                    "type": "Button",
-                    "id": "6af0c360-e23f-48c8-9f19-5affb14c80b2",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "TakePresent",
                     "type": "Button",
                     "id": "81a6dd4b-7ecf-4148-af8c-c1391db199dc",
@@ -78,18 +69,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Slam",
+                    "name": "ActionButton",
                     "type": "Button",
-                    "id": "11bf11cf-0aaa-4f6b-b10d-746c386a8cf6",
+                    "id": "3949b4a5-453f-41e4-93c9-4c08cae15967",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ActionButton",
+                    "name": "Restart",
                     "type": "Button",
-                    "id": "3949b4a5-453f-41e4-93c9-4c08cae15967",
+                    "id": "4aef4084-e438-48e7-be50-a4e82f1bc6b3",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -253,6 +244,17 @@
                 },
                 {
                     "name": "",
+                    "id": "0a931131-101e-41c1-bae9-16471cbfe212",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8bcae44b-6ce5-4205-bcf7-5b2c0bf190e4",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
@@ -341,39 +343,6 @@
                 },
                 {
                     "name": "",
-                    "id": "819b85cf-86d7-47a3-bf0b-a55a237586d1",
-                    "path": "<Keyboard>/g",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Roll",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "13ca5d45-7f30-45ba-9d59-bacc72227077",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Roll",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b2efb0a3-7710-42c9-99cd-1b786d3aa7f9",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Roll",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "5061370d-f586-4693-ad44-6885ea9583bc",
                     "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
@@ -396,45 +365,12 @@
                 },
                 {
                     "name": "",
-                    "id": "9137c9b7-d5d1-4205-b5e6-86c11259bb8b",
-                    "path": "<Gamepad>/leftStick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Slam",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "84bb66a1-9e82-4d61-a782-ecc095b62720",
-                    "path": "<Gamepad>/dpad/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Slam",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f9733123-1194-4c09-93dc-c7337224df1e",
-                    "path": "<Keyboard>/s",
+                    "id": "357d4702-91cc-4cb4-949a-ab0da7f025c5",
+                    "path": "<Keyboard>/p",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Slam",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "d2781ef1-4507-4fef-8f19-5219d05a402f",
-                    "path": "<Keyboard>/downArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Slam",
+                    "action": "TakePresent",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -468,6 +404,39 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "ActionButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c1112e15-836b-4ac5-88e6-f90d2606798a",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActionButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e3c39f0f-309b-48ea-a664-fd29e596161e",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Restart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bc2e3090-2814-47b9-9d50-f20a57a8eb72",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Restart",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

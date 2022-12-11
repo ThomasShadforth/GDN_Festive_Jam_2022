@@ -50,7 +50,7 @@ public class CheckForStunDecision : Decision
 
     Transform CheckWallDist(AIThinker thinker)
     {
-        RaycastHit2D hit = Physics2D.Raycast(thinker.transform.position, thinker.transform.right, thinker.jumpCheckDist * SetPresentDropDirection(thinker), thinker.whatIsGround);
+        RaycastHit2D hit = Physics2D.Raycast(thinker.transform.position, thinker.transform.right, ((thinker.jumpCheckDist + .33f) * SetPresentDropDirection(thinker)), thinker.whatIsGround);
 
         if (hit)
         {

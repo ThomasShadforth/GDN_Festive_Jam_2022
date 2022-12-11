@@ -82,15 +82,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Roll"",
-                    ""type"": ""Button"",
-                    ""id"": ""6af0c360-e23f-48c8-9f19-5affb14c80b2"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""TakePresent"",
                     ""type"": ""Button"",
                     ""id"": ""81a6dd4b-7ecf-4148-af8c-c1391db199dc"",
@@ -100,18 +91,18 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Slam"",
+                    ""name"": ""ActionButton"",
                     ""type"": ""Button"",
-                    ""id"": ""11bf11cf-0aaa-4f6b-b10d-746c386a8cf6"",
+                    ""id"": ""3949b4a5-453f-41e4-93c9-4c08cae15967"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ActionButton"",
+                    ""name"": ""Restart"",
                     ""type"": ""Button"",
-                    ""id"": ""3949b4a5-453f-41e4-93c9-4c08cae15967"",
+                    ""id"": ""4aef4084-e438-48e7-be50-a4e82f1bc6b3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -275,6 +266,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""0a931131-101e-41c1-bae9-16471cbfe212"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""8bcae44b-6ce5-4205-bcf7-5b2c0bf190e4"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
@@ -363,39 +365,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""819b85cf-86d7-47a3-bf0b-a55a237586d1"",
-                    ""path"": ""<Keyboard>/g"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Roll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""13ca5d45-7f30-45ba-9d59-bacc72227077"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Roll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b2efb0a3-7710-42c9-99cd-1b786d3aa7f9"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Roll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""5061370d-f586-4693-ad44-6885ea9583bc"",
                     ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
@@ -418,45 +387,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""9137c9b7-d5d1-4205-b5e6-86c11259bb8b"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Slam"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""84bb66a1-9e82-4d61-a782-ecc095b62720"",
-                    ""path"": ""<Gamepad>/dpad/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Slam"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f9733123-1194-4c09-93dc-c7337224df1e"",
-                    ""path"": ""<Keyboard>/s"",
+                    ""id"": ""357d4702-91cc-4cb4-949a-ab0da7f025c5"",
+                    ""path"": ""<Keyboard>/p"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
-                    ""action"": ""Slam"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d2781ef1-4507-4fef-8f19-5219d05a402f"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Slam"",
+                    ""action"": ""TakePresent"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -490,6 +426,39 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""ActionButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c1112e15-836b-4ac5-88e6-f90d2606798a"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActionButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e3c39f0f-309b-48ea-a664-fd29e596161e"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Restart"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bc2e3090-2814-47b9-9d50-f20a57a8eb72"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Restart"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1077,10 +1046,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_DropPresent = m_Player.FindAction("DropPresent", throwIfNotFound: true);
-        m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
         m_Player_TakePresent = m_Player.FindAction("TakePresent", throwIfNotFound: true);
-        m_Player_Slam = m_Player.FindAction("Slam", throwIfNotFound: true);
         m_Player_ActionButton = m_Player.FindAction("ActionButton", throwIfNotFound: true);
+        m_Player_Restart = m_Player.FindAction("Restart", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1158,10 +1126,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_DropPresent;
-    private readonly InputAction m_Player_Roll;
     private readonly InputAction m_Player_TakePresent;
-    private readonly InputAction m_Player_Slam;
     private readonly InputAction m_Player_ActionButton;
+    private readonly InputAction m_Player_Restart;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1172,10 +1139,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @DropPresent => m_Wrapper.m_Player_DropPresent;
-        public InputAction @Roll => m_Wrapper.m_Player_Roll;
         public InputAction @TakePresent => m_Wrapper.m_Player_TakePresent;
-        public InputAction @Slam => m_Wrapper.m_Player_Slam;
         public InputAction @ActionButton => m_Wrapper.m_Player_ActionButton;
+        public InputAction @Restart => m_Wrapper.m_Player_Restart;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1203,18 +1169,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @DropPresent.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDropPresent;
                 @DropPresent.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDropPresent;
                 @DropPresent.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDropPresent;
-                @Roll.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
-                @Roll.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
-                @Roll.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
                 @TakePresent.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTakePresent;
                 @TakePresent.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTakePresent;
                 @TakePresent.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTakePresent;
-                @Slam.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlam;
-                @Slam.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlam;
-                @Slam.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlam;
                 @ActionButton.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnActionButton;
                 @ActionButton.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnActionButton;
                 @ActionButton.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnActionButton;
+                @Restart.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRestart;
+                @Restart.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRestart;
+                @Restart.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRestart;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1237,18 +1200,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @DropPresent.started += instance.OnDropPresent;
                 @DropPresent.performed += instance.OnDropPresent;
                 @DropPresent.canceled += instance.OnDropPresent;
-                @Roll.started += instance.OnRoll;
-                @Roll.performed += instance.OnRoll;
-                @Roll.canceled += instance.OnRoll;
                 @TakePresent.started += instance.OnTakePresent;
                 @TakePresent.performed += instance.OnTakePresent;
                 @TakePresent.canceled += instance.OnTakePresent;
-                @Slam.started += instance.OnSlam;
-                @Slam.performed += instance.OnSlam;
-                @Slam.canceled += instance.OnSlam;
                 @ActionButton.started += instance.OnActionButton;
                 @ActionButton.performed += instance.OnActionButton;
                 @ActionButton.canceled += instance.OnActionButton;
+                @Restart.started += instance.OnRestart;
+                @Restart.performed += instance.OnRestart;
+                @Restart.canceled += instance.OnRestart;
             }
         }
     }
@@ -1384,10 +1344,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnDropPresent(InputAction.CallbackContext context);
-        void OnRoll(InputAction.CallbackContext context);
         void OnTakePresent(InputAction.CallbackContext context);
-        void OnSlam(InputAction.CallbackContext context);
         void OnActionButton(InputAction.CallbackContext context);
+        void OnRestart(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
