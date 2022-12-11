@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CityTilemap
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: -2064960711, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 1531555890, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 1065691992, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 1471158525, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 1548610623, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -837393482, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 678936713, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -580402677, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 1330303203, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -528494915, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 1060931829, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -1064143129, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -1275201084, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -1156302048, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -2118127562, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 1970186397, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -1073610217, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 1925049789, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 357936057, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -1829202639, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -614918536, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -1088653163, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -1612388678, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 51114779, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -1144401357, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -1579670899, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 1016320149, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 723047772, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -636107595, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: 935550632, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  - {fileID: -1890103432, guid: 9e7bc5bb46d19724ab9e53a4dd6aeaea, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - City_Tilesets_23
+  - City_Tilesets_22
+  - City_Tilesets_18
+  - City_Tilesets_21
+  - City_Tilesets_19
+  - City_Tilesets_20
+  - City_Tilesets_16
+  - City_Tilesets_27
+  - City_Tilesets_17
+  - City_Tilesets_26
+  - City_Tilesets_14
+  - City_Tilesets_25
+  - City_Tilesets_15
+  - City_Tilesets_24
+  - City_Tilesets_12
+  - City_Tilesets_13
+  - City_Tilesets_10
+  - City_Tilesets_11
+  - City_Tilesets_30
+  - City_Tilesets_9
+  - City_Tilesets_8
+  - City_Tilesets_3
+  - City_Tilesets_2
+  - City_Tilesets_1
+  - City_Tilesets_0
+  - City_Tilesets_7
+  - City_Tilesets_6
+  - City_Tilesets_5
+  - City_Tilesets_4
+  - City_Tilesets_29
+  - City_Tilesets_28
+  m_RenderDataMap: {}
+  m_Tag: CityTilemap
+  m_IsVariant: 0

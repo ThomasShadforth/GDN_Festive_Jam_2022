@@ -692,9 +692,6 @@ public class PlayerController : MonoBehaviour
             {
                 _renderer.color = Color.blue;
 
-                Debug.Log("SLAM!");
-
-
 
                 Collider2D[] slammedEnemies = Physics2D.OverlapCircleAll(transform.position, slamRadiusTiers[_currentSpeedTier], _enemyLayer);
 
@@ -712,10 +709,7 @@ public class PlayerController : MonoBehaviour
 
                     }
                 }
-                else
-                {
-                    Debug.Log("AAAAAA");
-                }
+                
 
                 Collider2D[] slammedDestructibles = Physics2D.OverlapCircleAll(transform.position, slamRadiusTiers[_currentSpeedTier], _whatIsGround);
 
