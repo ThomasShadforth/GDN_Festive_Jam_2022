@@ -53,6 +53,7 @@ public class PresentObject : MonoBehaviour
     {
         if(other.CompareTag("Player") && currentState == PresentStates.pickup)
         {
+            _trigger.enabled = false;
             GameManager.instance.ChangePresentCount(1);
             PresentObjectPool.instance.AddToPool(this.gameObject);
         }
@@ -86,8 +87,9 @@ public class PresentObject : MonoBehaviour
         }
     }
 
-    void EnableCollider()
+    public void EnableCollider()
     {
+        
         _trigger.enabled = true;
     }
 }

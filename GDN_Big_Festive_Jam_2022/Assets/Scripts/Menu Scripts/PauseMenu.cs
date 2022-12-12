@@ -29,6 +29,11 @@ public class PauseMenu : MonoBehaviour
         
     }
 
+    private void OnDisable()
+    {
+        _input.Dispose();
+    }
+
     public void PauseGame(InputAction.CallbackContext context)
     {
         if(UIFade.instance.fading || GameManager.instance.isCountingDown)
@@ -95,6 +100,7 @@ public class PauseMenu : MonoBehaviour
         }
         yield return new WaitForSeconds(1f);
         GameManager.instance.DestroySelf();
+        _input.Dispose();
         FindObjectOfType<PlayerController>()._input.Dispose();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

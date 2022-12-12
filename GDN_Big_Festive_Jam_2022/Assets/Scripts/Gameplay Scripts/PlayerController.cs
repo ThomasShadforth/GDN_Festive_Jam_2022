@@ -7,7 +7,8 @@ using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
-    Rigidbody2D _rb2d;
+    [HideInInspector]
+    public Rigidbody2D _rb2d;
     Vector2 _gravForce;
     Vector2 _rayDir = Vector2.down;
 
@@ -51,6 +52,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float[] _movementSpeedTiers;
     [SerializeField] float[] _jumpGravityTiers;
     [SerializeField] float[] _rollDistanceTiers;
+    [SerializeField] Vector2[] _sackSizeTiers;
+    [SerializeField] GameObject[] _sackObjects;
     [SerializeField] int[] _maxPresentTiers;
     [SerializeField] float rollTime;
     [SerializeField] float _rollBuffer = .15f;
@@ -89,9 +92,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float[] slamRadiusTiers;
 
     //Jumping used for input system checks
-    bool _jumping;
+    [HideInInspector]
+    public bool _jumping;
     //Ability booleans (Whether they're being used or not)
-    bool _rolling;
+    [HideInInspector]
+    public bool _rolling;
+    [HideInInspector]
     bool _slamming;
     bool _cancelledRoll;
     bool _canRoll;
@@ -103,7 +109,8 @@ public class PlayerController : MonoBehaviour
 
     float dashModifier = 1f;
     public PlayerInputActions _input;
-    
+
+    PlayerAnimator _playerAnimator;
 
     SpriteRenderer _renderer;
 
@@ -142,6 +149,23 @@ public class PlayerController : MonoBehaviour
     {
         remainingJumps = maxJumps;
         _renderer = GetComponent<SpriteRenderer>();
+        _playerAnimator = GetComponent<PlayerAnimator>();
+
+        SetInitialSize();
+
+    }
+
+    void SetInitialSize()
+    {
+        _sack.transform.localScale = _sackSizeTiers[_currentSpeedTier];
+
+        for(int i = 0; i < _sackObjects.Length; i++)
+        {
+            if(i != _currentSpeedTier)
+            {
+                _sackObjects[i].SetActive(false);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -163,12 +187,13 @@ public class PlayerController : MonoBehaviour
         }
 
         bool cancelRoll = Physics2D.Raycast(transform.position, transform.right, .6f * xDirect, _whatIsGround);
-        Debug.DrawRay(transform.position, transform.right * .6f * xDirect, Color.red);
+        
 
         if(_cancelledRoll && cancelRoll)
         {
             EndRollCancel();
         }
+        
         
 
         //Debug.Log(_desiredJump);
@@ -315,6 +340,8 @@ public class PlayerController : MonoBehaviour
     {
         bool grounded = false;
 
+
+
         if (rayHitGround)
         {
             grounded = hit.distance < _rideHeight * 1.6f;
@@ -330,7 +357,7 @@ public class PlayerController : MonoBehaviour
     private (bool rayHitGround, RaycastHit2D hit) RaycastToGround()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, _rayToGroundHeight, _whatIsGround);
-
+        Debug.DrawRay(transform.position, Vector2.down * _rayToGroundHeight, Color.red);
         bool rayHitGround = Physics2D.Raycast(transform.position, Vector2.down, _rayToGroundHeight, _whatIsGround);
 
         return (rayHitGround, hit);
@@ -482,6 +509,7 @@ public class PlayerController : MonoBehaviour
 
         if (_isJumping)
         {
+            GetComponent<Animator>().SetBool("isDoubleJumping", true);
             remainingJumps--;
             if (_cancelledRoll)
             {
@@ -507,12 +535,14 @@ public class PlayerController : MonoBehaviour
             dashModifier = 1.5f;
             _isDashing = true;
             AfterImageObjectPool.instance.GetFromPool();
+            GetComponent<Animator>().SetBool("isDashing", true);
             _lastImageXPos = transform.position.x;
         }
         else if (context.canceled)
         {
             //Cancel the dash (Set modifier back to normal)
             dashModifier = 1f;
+            GetComponent<Animator>().SetBool("isDashing", false);
             _isDashing = false;
         }
     }
@@ -529,7 +559,7 @@ public class PlayerController : MonoBehaviour
         {
             
             GameObject present = PresentObjectPool.instance.GetFromPool();
-            present.GetComponent<PresentObject>().Invoke("EnableCollider", .5f);
+            present.GetComponent<PresentObject>().Invoke("EnableCollider", .95f);
 
             RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right * xDirect, _wallCheckDistance, _whatIsGround);
 
@@ -585,14 +615,23 @@ public class PlayerController : MonoBehaviour
         bool enemyStomp = Physics2D.OverlapBox(_feet.transform.position, new Vector2(.95f, .13f), 0, _enemyLayer);
         if (enemyStomp)
         {
-            AIThinker enemy = Physics2D.OverlapBox(_feet.transform.position, new Vector2(.5f, .5f), 0, _enemyLayer).GetComponent<AIThinker>();
-            StartCoroutine(CinemachineCamShake.CamShakeCo(.1f, FindObjectOfType<CinemachineVirtualCamera>()));
-            enemy.isStunned = true;
-            _velocity.y += 2f * enemyStompCount * 1.5f;
 
-            if (enemyStompCount < 3)
+            Collider2D enemy = Physics2D.OverlapBox(_feet.transform.position, new Vector2(.5f, .5f), 0, _enemyLayer);
+
+            if (enemy != null)
             {
-                enemyStompCount++;
+                if (enemy.GetComponent<AIThinker>())
+                {
+                    AIThinker enemyAI = enemy.GetComponent<AIThinker>();
+                    StartCoroutine(CinemachineCamShake.CamShakeCo(.1f, FindObjectOfType<CinemachineVirtualCamera>()));
+                    enemyAI.isStunned = true;
+                    _velocity.y += 2f * enemyStompCount * 1.5f;
+
+                    if (enemyStompCount < 3)
+                    {
+                        enemyStompCount++;
+                    }
+                }
             }
         }
 
@@ -647,7 +686,9 @@ public class PlayerController : MonoBehaviour
     IEnumerator PlayerRollCo(float rollSpeed)
     {
         GetComponent<PlayerRoll>().PlayerRollAction(true);
-        _renderer.color = Color.yellow;
+        //_renderer.color = Color.yellow;
+
+        GetComponent<Animator>().Play("Roll");
 
         float rollTimer = rollTime;
 
@@ -664,6 +705,8 @@ public class PlayerController : MonoBehaviour
         }
 
         _renderer.color = Color.white;
+
+        GetComponent<Animator>().Play("Idle");
 
         _rolling = false;
 
@@ -745,7 +788,7 @@ public class PlayerController : MonoBehaviour
 
         if (enemyToLaunch.grounded)
         {
-            enemyToLaunch.rb2d.velocity = new Vector2(slamKnockDir.x * 10, slamKnockDir.y * 20);
+            enemyToLaunch.rb2d.velocity = new Vector2(slamKnockDir.x * 25, slamKnockDir.y * 35);
         }
 
         yield return new WaitForSeconds(.3f);
@@ -799,15 +842,19 @@ public class PlayerController : MonoBehaviour
 
         if (presentNo >= _maxPresentTiers[_currentSpeedTier])
         {
+            _sackObjects[_currentSpeedTier].SetActive(false);
             _currentSpeedTier++;
-            _sack.transform.localScale += new Vector3(0, 1, 0);
+            _sackObjects[_currentSpeedTier].SetActive(true);
+            _sack.transform.localScale = _sackSizeTiers[_currentSpeedTier];
         }
         else if (_currentSpeedTier > 0)
         {
             if (presentNo < _maxPresentTiers[_currentSpeedTier - 1])
             {
+                _sackObjects[_currentSpeedTier].SetActive(false);
                 _currentSpeedTier--;
-                _sack.transform.localScale += new Vector3(0, -1, 0);
+                _sackObjects[_currentSpeedTier].SetActive(true);
+                _sack.transform.localScale = _sackSizeTiers[_currentSpeedTier];
             }
         }
     }
@@ -819,4 +866,21 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     //Outline input methods
+}
+
+[System.Serializable]
+public struct BagValues
+{
+    public GameObject bagObject;
+    public Vector2 colliderDimensions;
+
+    public void SetActive()
+    {
+        bagObject.SetActive(true);
+    }
+
+    public void SetInactive()
+    {
+        bagObject.SetActive(false);
+    }
 }

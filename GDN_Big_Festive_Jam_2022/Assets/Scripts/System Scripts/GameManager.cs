@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SetMaxPresents();
+        //AudioManager.instance.Play(SceneManager.GetActiveScene().name);
     }
 
     public void SetMaxPresents()
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
         maxPresents = presentsFound.Length;
         _countdown = defaultCountdown;
         _timer = defaultTimer;
+        StagePitPosition.lastCheckPointPos = GameObject.FindGameObjectWithTag("Player").transform.position;
         string tempCountdown = string.Format("{0:00}", _countdown);
         string timerDefault = string.Format("{0:0}:{1:00}", Mathf.Floor(_timer/60), _timer % 60);
         countDownText.text = tempCountdown;
@@ -68,6 +70,8 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        
 
         instance = this;
         DontDestroyOnLoad(this.gameObject);
@@ -141,6 +145,7 @@ public class GameManager : MonoBehaviour
 
         FindObjectOfType<PlayerController>()._input.Dispose();
         SceneManager.LoadScene("GameWin");
+        DestroySelf();
     }
 
 
@@ -182,6 +187,7 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<PlayerController>()._input.Dispose();
         SceneIndexer.lastSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene("GameOver");
+        DestroySelf();
     }
     public void DestroySelf()
     {

@@ -8,6 +8,10 @@ public class PlayerRoll : MonoBehaviour
     public Collider2D originalCollider;
     public GameObject playerCollider;
 
+    public Transform wallCheckPos;
+
+    public LayerMask whatIsWall;
+
     Vector3 originalScale;
 
     private void Start()
@@ -31,6 +35,28 @@ public class PlayerRoll : MonoBehaviour
             originalCollider.enabled = true;
             playerCollider.transform.localScale = originalScale;
             playerCollider.SetActive(false);
+            CheckForWall();
         }
+    }
+
+    public void CheckForWall()
+    {
+        bool stuck = Physics2D.OverlapCircle(transform.position, .21f, whatIsWall);
+
+        if (stuck)
+        {
+            StartCoroutine(MovePlayerFromWallCo());
+        }
+    }
+
+    IEnumerator MovePlayerFromWallCo()
+    {
+        UIFade.instance.FadeToBlack();
+        FindObjectOfType<PlayerController>()._beingMoved = true;
+        yield return new WaitForSeconds(1f);
+        FindObjectOfType<PlayerController>().transform.position = StagePitPosition.lastCheckPointPos;
+        UIFade.instance.FadeFromBlack();
+        FindObjectOfType<PlayerController>()._beingMoved = false;
+
     }
 }

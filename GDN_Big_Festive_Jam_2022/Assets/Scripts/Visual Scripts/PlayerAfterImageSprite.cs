@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerAfterImageSprite : MonoBehaviour
 {
-    float _activeTime = .1f;
+    float _activeTime = 1.85f;
     float _timeActivated;
     float _alpha;
     [SerializeField]
@@ -29,6 +29,7 @@ public class PlayerAfterImageSprite : MonoBehaviour
         _renderer.sprite = _playerRenderer.sprite;
 
         transform.position = player.position;
+        transform.localScale = player.localScale;
         transform.rotation = player.rotation;
 
         _timeActivated = Time.time;
@@ -37,7 +38,7 @@ public class PlayerAfterImageSprite : MonoBehaviour
     private void Update()
     {
         _alpha *= _alphaMultiplier;
-        _color = new Color(1f, 1f, 1f, _alpha);
+        _color = new Color(143 / 255, 62 / 255, 255 / 255, _alpha);
         _renderer.color = _color;
 
         if(Time.time >= (_timeActivated + _activeTime))

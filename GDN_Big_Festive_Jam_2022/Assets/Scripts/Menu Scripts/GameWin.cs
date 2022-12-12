@@ -26,7 +26,7 @@ public class GameWin : MonoBehaviour
 
         if (AudioManager.instance != null && GameManager.instance != null)
         {
-            AudioManager.instance.DestroySelf();
+            //AudioManager.instance.DestroySelf();
             GameManager.instance.DestroySelf();
         }
 

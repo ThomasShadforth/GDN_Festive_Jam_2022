@@ -13,19 +13,13 @@ public class PresentRemainDecision : Decision
 
     public bool CheckPresent(AIThinker thinker)
     {
-        if (thinker.targetPresent != null)
-        {
-            
-            return true;
-        }
-        else if(thinker.presentTarget != null)
+        if(Physics2D.OverlapCircle(thinker.transform.position, thinker.minChaseDistance, thinker.presentsLayer))
         {
             return true;
         }
         else
         {
-            Debug.Log("NO PRESENT");
-            thinker.targetPresent = null;
+            thinker.presentTarget = null;
             return false;
         }
     }

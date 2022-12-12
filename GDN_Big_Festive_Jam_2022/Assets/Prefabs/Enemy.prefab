@@ -247,7 +247,7 @@ MonoBehaviour:
   stunTimer: 0
   isStunned: 0
   isHoldingPresent: 0
-  minPatrolDist: 0.5
+  minPatrolDist: 0.75
   minStealDistance: 0.9
   minChaseDistance: 5
   isBeingLaunched: 0
