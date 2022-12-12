@@ -443,7 +443,7 @@ MonoBehaviour:
   _dashMaxSpeed: 10
   _maxSpeed: 0
   _acceleration: 50
-  rollForce: 165
+  rollForce: 190
   _rollCooldown: 1
   _movementSpeedTiers:
   - 1
@@ -460,8 +460,8 @@ MonoBehaviour:
   - 0.9
   - 0.7
   - 0.5
-  _maxPresentTiers: 04000000080000000c00000010000000
-  rollTime: 0.285
+  _maxPresentTiers: 02000000030000000600000008000000
+  rollTime: 0.295
   _rollBuffer: 0.15
   _rideHeight: 0.4
   _rayToGroundHeight: 1.17

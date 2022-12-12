@@ -20,7 +20,14 @@ public class FindPresentDecision : Decision
             /*
             thinker.targetPresent = Physics2D.OverlapCircle(thinker.transform.position, thinker.minChaseDistance, thinker.presentsLayer).GetComponent<Present>();*/
             thinker.presentTarget = Physics2D.OverlapCircle(thinker.transform.position, thinker.minChaseDistance, thinker.presentsLayer).GetComponent<PresentObject>();
-            return true;
+            if (thinker.presentTarget.currentState == PresentStates.pickup)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {

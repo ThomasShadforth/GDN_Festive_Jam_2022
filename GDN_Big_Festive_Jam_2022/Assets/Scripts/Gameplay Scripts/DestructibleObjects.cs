@@ -36,7 +36,8 @@ public class DestructibleObjects : MonoBehaviour, IDamageInterface
 
     public void BreakObject()
     {
-        
+        GetComponent<Rigidbody2D>().isKinematic = false;
+        GetComponent<Collider2D>().enabled = false;
         Vector2 direction = transform.position - _playerPosition.position;
         direction = direction.normalized;
         direction.y = .5f;

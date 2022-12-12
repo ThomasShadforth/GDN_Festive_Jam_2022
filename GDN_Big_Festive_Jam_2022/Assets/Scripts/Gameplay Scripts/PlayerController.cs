@@ -317,7 +317,7 @@ public class PlayerController : MonoBehaviour
 
         if (rayHitGround)
         {
-            grounded = hit.distance < _rideHeight * 1.3f;
+            grounded = hit.distance < _rideHeight * 1.6f;
         }
         else
         {
@@ -414,7 +414,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (_isDashing)
                 {
-                    StartCoroutine(PlayerRollCo(.28f));
+                    StartCoroutine(PlayerRollCo(.289f));
 
                 }
                 else
@@ -543,7 +543,7 @@ public class PlayerController : MonoBehaviour
             {
                 present.transform.position = _throwPos.position;
                 present.GetComponent<PresentObject>()._droppedOrThrown = true;
-                present.GetComponent<Rigidbody2D>().velocity = new Vector2(transform.right.x * xDirect, .5f) * 6f;
+                present.GetComponent<Rigidbody2D>().velocity = new Vector2(transform.right.x * xDirect, .7f) * 6f;
             }
 
             

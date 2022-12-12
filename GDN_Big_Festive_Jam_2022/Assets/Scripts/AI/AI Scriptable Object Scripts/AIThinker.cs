@@ -21,6 +21,8 @@ public class AIThinker : MonoBehaviour
 
     [HideInInspector] public int heldPresentCount = 0;
 
+    EnemyAnimator _enemyAnimator;
+
     public Transform AIHandPos;
     public Transform otherSidePos;
     [SerializeField] Transform feetPos;
@@ -62,6 +64,8 @@ public class AIThinker : MonoBehaviour
         stunTimer = stunTime;
 
         originalPosition = transform.position;
+        _enemyAnimator = GetComponent<EnemyAnimator>();
+
     }
 
 
@@ -77,12 +81,21 @@ public class AIThinker : MonoBehaviour
 
         currentState.UpdateState(this);
         CheckForXScale();
+        AnimateEnemy();
         CheckIfGrounded();
     }
 
     void CheckIfGrounded()
     {
         grounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDist, whatIsGround);
+    }
+
+    void AnimateEnemy()
+    {
+        if(_enemyAnimator != null)
+        {
+            _enemyAnimator.AnimateAI(this);
+        }
     }
 
     public void TransitionToState(State nextState)

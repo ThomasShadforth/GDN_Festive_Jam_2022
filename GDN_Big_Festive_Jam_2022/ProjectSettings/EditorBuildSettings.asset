@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/TitleScreen.unity
     guid: 2c589e45237f0f94f9134044cf82836f
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/Level 1 - Rooftops.unity
+    guid: 4f559bd384e69084ebeb133975a85352
   - enabled: 1
     path: Assets/Scenes/GameOver.unity
     guid: 36a8ca28c0ac7d840837d8082cd4d87e

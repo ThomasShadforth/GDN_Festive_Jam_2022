@@ -181,3 +181,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handToAppearIn: {fileID: 0}
+  currentState: 0
+  originalPosition: {x: 0, y: 0}
+  _droppedOrThrown: 0
+  _trigger: {fileID: 8885577872292910485}
+  collider: {fileID: 8885577872292910474}
