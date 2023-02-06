@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
 
     public void SetMaxPresents()
     {
+        //Sets default values (max presents, the countdown, timer for the game, etc.)
         maxPresents = 0;
         PresentObject[] presentsFound = FindObjectsOfType<PresentObject>();
         maxPresents = presentsFound.Length;
@@ -84,11 +85,13 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Do not execute while the game is starting
         if (isCountingDown)
         {
             return;
         }
 
+        //count down the game's timer while it is greater than 0
         if (_timer > 0)
         {
             _timer -= GamePause.deltaTime;
@@ -97,6 +100,7 @@ public class GameManager : MonoBehaviour
 
             if(_timer < 0)
             {
+                //Trigger game over after the timer is set to 0
                 _timer = 0;
                 timerDefault = string.Format("{0:0}:{1:00}", Mathf.Floor(_timer / 60), _timer % 60);
                 timerText.text = timerDefault;
@@ -109,6 +113,7 @@ public class GameManager : MonoBehaviour
 
     }
 
+    //Called when picking up a present, throwing a present, dunking a present, or when a present is stolen from the player by the elves
     public void ChangePresentCount(int presentChange)
     {
         presentCount += presentChange;
@@ -118,6 +123,7 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<PlayerController>().CheckPresentCount(presentCount);
     }
 
+    //Changes the number of presents currently stored in the goal (Used to check if the level has been completed)
     public void ChangeGoalPresents(int presentChange)
     {
         goalPresents += presentChange;
@@ -135,6 +141,7 @@ public class GameManager : MonoBehaviour
 
     }
 
+    //Loads the victory scene
     IEnumerator LoadGameWinCo()
     {
         UIFade.instance.FadeToBlack();
@@ -148,7 +155,7 @@ public class GameManager : MonoBehaviour
         DestroySelf();
     }
 
-
+    //Fades to black, calls the game over coroutine
     void GameOver()
     {
         if(UIFade.instance != null)
@@ -159,12 +166,14 @@ public class GameManager : MonoBehaviour
         StartCoroutine(LoadGameOverCo());
     }
 
+    //Coroutine used to countdown at the start of the game
     IEnumerator CountDownCo()
     {
         isCountingDown = true;
 
         yield return new WaitForSeconds(.5f);
 
+        //After a brief pause after loading in, start the countdown
         countDownText.gameObject.SetActive(true);
 
         while(_countdown > 0)
@@ -177,10 +186,12 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        //Allows the player to move after the countdown ends
         isCountingDown = false;
         countDownText.gameObject.SetActive(false);
     }
 
+    //loads the game over scene
     IEnumerator LoadGameOverCo()
     {
         yield return new WaitForSeconds(1f);
@@ -189,6 +200,8 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("GameOver");
         DestroySelf();
     }
+
+    //destroys itself after the game ends (quit to menu, win, game over, etc.)
     public void DestroySelf()
     {
         Destroy(gameObject);

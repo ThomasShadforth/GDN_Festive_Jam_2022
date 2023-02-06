@@ -49,12 +49,15 @@ public class PresentObject : MonoBehaviour
         
     }
 
+    //Adds a present to the count after picking it up
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.CompareTag("Player") && currentState == PresentStates.pickup)
         {
             _trigger.enabled = false;
+            //Increase count by 1
             GameManager.instance.ChangePresentCount(1);
+            //Adds it to the object pool (sets it inactive)
             PresentObjectPool.instance.AddToPool(this.gameObject);
         }
     }
