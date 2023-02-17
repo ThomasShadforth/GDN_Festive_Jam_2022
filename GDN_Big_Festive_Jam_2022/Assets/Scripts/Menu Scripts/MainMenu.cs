@@ -13,9 +13,10 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject _titleScreen;
     [SerializeField] GameObject _mainMenu;
     [SerializeField] GameObject _settingsMenu;
+    [SerializeField] GameObject _howToPlay;
     [SerializeField] Button _firstMenuButton;
     [SerializeField] Button _settingsMenuButton;
-    
+    [SerializeField] Button _howToPlayButton;
     
 
     private void Awake()
@@ -74,6 +75,18 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(SetButtonSelectCo(_firstMenuButton));
     }
 
+    public void OpenHowToPlay()
+    {
+        _howToPlay.SetActive(true);
+        StartCoroutine(SetButtonSelectCo(_howToPlayButton));
+    }
+
+    public void CloseHowToPlay()
+    {
+        _howToPlay.SetActive(false);
+        StartCoroutine(SetButtonSelectCo(_firstMenuButton));
+    }
+
     public void StartGame()
     {
         //Start the game (Load the first level)
@@ -83,7 +96,10 @@ public class MainMenu : MonoBehaviour
 
     IEnumerator StartGameCo()
     {
-        UIFade.instance.FadeToBlack();
+        if (UIFade.instance != null)
+        {
+            UIFade.instance.FadeToBlack();
+        }
         yield return new WaitForSeconds(1f);
         AudioManager.instance.Stop("TitleScreen");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);

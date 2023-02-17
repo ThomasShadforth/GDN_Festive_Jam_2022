@@ -540,12 +540,12 @@ public class PlayerController : MonoBehaviour
             {
                 if (_isDashing)
                 {
-                    StartCoroutine(PlayerRollCo(.289f));
+                    StartCoroutine(PlayerRollCo(.293f));
 
                 }
                 else
                 {
-                    StartCoroutine(PlayerRollCo(.22f));
+                    StartCoroutine(PlayerRollCo(.252f));
                 }
             }
         }
